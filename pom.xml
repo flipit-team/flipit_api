@@ -12,20 +12,20 @@
     </parent>
 
     <groupId>com.flip</groupId>
-    <artifactId>flip_parent</artifactId>
+    <artifactId>flip-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>../flip_api</module>
-        <module>../flip_service</module>
-        <module>../flip_model</module>
+        <module>flip-model</module>
+        <module>flip-service</module>
+        <module>flip-api</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
-        <lombok.version>1.18.12</lombok.version>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
+        <lombok.version>1.18.20</lombok.version>
     </properties>
 
     <dependencies>
@@ -102,7 +102,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.flip.flip_api.FlipApiApplication</mainClass>
+                    <mainClass>com.flip.flip-api.FlipApiApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
