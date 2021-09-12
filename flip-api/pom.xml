@@ -12,7 +12,7 @@
 
     <artifactId>flip-api</artifactId>
     <packaging>jar</packaging>
-    <name>flip-api</name>
+    <name>Flip API Service</name>
 
     <description>Flip items with your neighbours</description>
 
@@ -20,11 +20,12 @@
         <dependency>
             <groupId>com.flip</groupId>
             <artifactId>flip-service</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>com.flip</groupId>
+            <artifactId>flip-data</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

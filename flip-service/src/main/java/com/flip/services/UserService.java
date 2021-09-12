@@ -1,6 +1,6 @@
 package com.flip.services;
 
-import com.flip.entity.User;
+import com.flip.data.entity.User;
 import com.flip.pojo.request.UserRequest;
 import com.flip.pojo.response.BaseResponse;
 

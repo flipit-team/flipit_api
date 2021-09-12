@@ -1,12 +1,12 @@
 package com.flip.services.impl;
 
-import com.flip.entity.User;
-import com.flip.enums.ResponseCode;
-import com.flip.enums.UserStatus;
+import com.flip.data.entity.User;
+import com.flip.data.enums.ResponseCode;
+import com.flip.data.enums.UserStatus;
 import com.flip.pojo.request.UserRequest;
 import com.flip.pojo.response.BaseResponse;
-import com.flip.repository.RoleRepository;
-import com.flip.repository.UserRepository;
+import com.flip.data.repository.RoleRepository;
+import com.flip.data.repository.UserRepository;
 import com.flip.services.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BaseResponse saveUser(UserRequest userRequest) {
-        if (repository.findUserByEmail(userRequest.getEmail()) != null) {
+        if (repository.findOneByEmail(userRequest.getEmail()) != null) {
             return new BaseResponse(ResponseCode.Bad_Request.getCode(), "A user with this email already exists.");
         }
 
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
             return new BaseResponse(ResponseCode.Not_Found);
         }
 
-        User emailUser = repository.findUserByEmail(userRequest.getEmail());
+        User emailUser = repository.findOneByEmail(userRequest.getEmail());
         if (emailUser != null && !emailUser.getId().equals(user.getId())) {
             return new BaseResponse(ResponseCode.Bad_Request.getCode(), "A user with this email already exists.");
         }
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
         user.setTitle(userRequest.getTitle());
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
-        user.setEmailAddress(userRequest.getEmail());
+        user.setEmail(userRequest.getEmail());
         user.setPhoneNumber(userRequest.getMobile());
         user.setUserRoles(new HashSet<>(
                 roleRepository.getRolesByIdIn(userRequest.getRoleIds())));

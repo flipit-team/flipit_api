@@ -13,18 +13,26 @@
 
     <artifactId>flip-service</artifactId>
     <packaging>jar</packaging>
-    <name>Flip Service</name>
+    <name>Flip Service Lib</name>
 
     <dependencies>
         <dependency>
             <groupId>com.flip</groupId>
-            <artifactId>flip-model</artifactId>
+            <artifactId>flip-data</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

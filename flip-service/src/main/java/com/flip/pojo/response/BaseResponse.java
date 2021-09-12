@@ -1,6 +1,6 @@
 package com.flip.pojo.response;
 
-import com.flip.enums.ResponseCode;
+import com.flip.data.enums.ResponseCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

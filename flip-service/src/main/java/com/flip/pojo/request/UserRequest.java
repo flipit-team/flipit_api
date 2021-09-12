@@ -1,7 +1,6 @@
 package com.flip.pojo.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.flip.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
