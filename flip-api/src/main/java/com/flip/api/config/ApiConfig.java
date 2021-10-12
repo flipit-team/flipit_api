@@ -8,11 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+
+@EnableSwagger2
 @Configuration
 @Import(value = {DataConfig.class, ServiceConfig.class})
 public class ApiConfig {
-    
+
     @Bean
     PasswordEncoder passwordEncoder() 
     {
