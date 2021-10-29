@@ -31,7 +31,7 @@ public class Address extends BaseEntity {
     @JoinColumn(name = "country_fk")
     private Country country;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
-    @JoinColumn(name = "user_fk", nullable = false)
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
+    @JoinColumn(name = "app_user_fk", nullable = false)
+    private AppUser appUser;
 }

@@ -20,12 +20,7 @@
         <dependency>
             <groupId>com.flip</groupId>
             <artifactId>flip-service</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.flip</groupId>
-            <artifactId>flip-data</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 

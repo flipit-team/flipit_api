@@ -23,7 +23,7 @@ public class Item extends BaseEntity {
     @Column(name = "image_urls")
     private String imageUrls;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
     @JoinColumn(name = "user", nullable = false)
-    private User owner;
+    private AuthUser owner;
 }

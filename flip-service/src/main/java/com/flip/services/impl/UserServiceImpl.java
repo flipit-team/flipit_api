@@ -1,26 +1,30 @@
 package com.flip.services.impl;
 
-import com.flip.data.entity.User;
+import com.flip.data.entity.AppUser;
+import com.flip.data.entity.AuthUser;
 import com.flip.data.enums.ResponseCode;
 import com.flip.data.enums.UserStatus;
+import com.flip.data.repository.AppUserRepository;
+import com.flip.data.repository.AuthUserRepository;
+import com.flip.data.repository.RoleRepository;
 import com.flip.pojo.request.UserRequest;
 import com.flip.pojo.response.BaseResponse;
-import com.flip.data.repository.RoleRepository;
-import com.flip.data.repository.UserRepository;
 import com.flip.services.UserService;
-import org.apache.commons.lang3.StringUtils;
+import com.flip.util.RefUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Charles on 23/06/2021
@@ -29,7 +33,10 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserRepository repository;
+    private AppUserRepository appUserRepository;
+
+    @Autowired
+    private AuthUserRepository authUserRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -38,86 +45,107 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User findUserById(Long id) {
-        return repository.findUserById(id);
+    public AppUser findUserById(Long id) {
+        return appUserRepository.findAppUserById(id);
     }
 
     @Override
-    public List<User> getAllActiveUsers(int page, int size) {
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        return new AuthUser();
+    }
+
+    @Override
+    public List<AppUser> getAllActiveUsers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> userPage = repository.findAllActiveUsers(pageable);
-        userPage.forEach(x -> x.setPassword(null));
-        List<User> users = userPage.getContent();
-        return users;
+        Page<AppUser> userPage = appUserRepository.findAllActiveUsers(pageable);
+        userPage.forEach(x ->
+                x.getAuthUser().eraseCredentials());
+        List<AppUser> appUsers = userPage.getContent();
+        return appUsers;
     }
 
     @Override
-    public BaseResponse saveUser(UserRequest userRequest) {
-        if (repository.findOneByEmail(userRequest.getEmail()) != null) {
+    @Transactional
+    public BaseResponse saveAppUser(UserRequest userRequest) {
+        if (appUserRepository.findByEmail(userRequest.getEmail()) != null ||
+                authUserRepository.findByUsername(userRequest.getEmail()) != null) {
+            return new BaseResponse(ResponseCode.Bad_Request.getCode(), "A user with this email already exists.");
+        }
+        if (authUserRepository.findByUsername(userRequest.getEmail()) != null) {
             return new BaseResponse(ResponseCode.Bad_Request.getCode(), "A user with this email already exists.");
         }
 
-        User user = new User();
-        BeanUtils.copyProperties(userRequest, user);
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        user.setDateVerified(new Date());
-        user.setStatus(UserStatus.Registered);
-        user.setVerificationCode(UUID.randomUUID().toString());
-        repository.save(user);
+        AuthUser authUser = new AuthUser(userRequest.getEmail(), passwordEncoder.encode(userRequest.getPassword()), null);
+        AppUser appUser = new AppUser(authUser);
+        BeanUtils.copyProperties(userRequest, appUser);
+        appUser.setStatus(UserStatus.Registered);
+        authUserRepository.save(authUser);
+        appUserRepository.save(appUser);
         //emailService.sendAccountVerificationEmail(user);
         return new BaseResponse(ResponseCode.Success);
     }
 
     @Override
     public BaseResponse updateUser(Long id, UserRequest userRequest) {
-        User user = findUserById(id);
-        if (user == null) {
+        AppUser appUser = findUserById(id);
+        if (appUser == null) {
             return new BaseResponse(ResponseCode.Not_Found);
         }
 
-        User emailUser = repository.findOneByEmail(userRequest.getEmail());
-        if (emailUser != null && !emailUser.getId().equals(user.getId())) {
+        AppUser emailAppUser = appUserRepository.findByEmail(userRequest.getEmail());
+        if (emailAppUser != null && !emailAppUser.getId().equals(appUser.getId())) {
             return new BaseResponse(ResponseCode.Bad_Request.getCode(), "A user with this email already exists.");
         }
 
-        user.setTitle(userRequest.getTitle());
-        user.setFirstName(userRequest.getFirstName());
-        user.setLastName(userRequest.getLastName());
-        user.setEmail(userRequest.getEmail());
-        user.setPhoneNumber(userRequest.getMobile());
-        user.setUserRoles(new HashSet<>(
+        appUser.setTitle(userRequest.getTitle());
+        appUser.setFirstName(userRequest.getFirstName());
+        appUser.setLastName(userRequest.getLastName());
+        appUser.setEmail(userRequest.getEmail());
+        appUser.setPhoneNumber(userRequest.getMobile());
+        appUser.setUserRoles(new HashSet<>(
                 roleRepository.getRolesByIdIn(userRequest.getRoleIds())));
-        if (StringUtils.isNotBlank( userRequest.getPassword()))
-            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        repository.save(user);
+        appUserRepository.save(appUser);
+        return new BaseResponse(ResponseCode.Success);
+    }
+
+    @Override
+    public BaseResponse initiateUserVerification(Long userId) {
+        AppUser appUser = appUserRepository.findAppUserById(userId);
+        if (appUser == null) {
+            return new BaseResponse(ResponseCode.Not_Found);
+        }
+
+        appUser.setVerificationCode(RefUtil.generateUniqueRef());
+        appUserRepository.save(appUser);
+        //emailService.sendVerificationInitiationEmail(user);
         return new BaseResponse(ResponseCode.Success);
     }
 
     @Override
     public BaseResponse verifyUser(String code) {
-        User user = repository.findUserByVerificationCode(code);
-        if (user == null) {
+        AppUser appUser = appUserRepository.findUserByVerificationCode(code);
+        if (appUser == null) {
             return new BaseResponse(ResponseCode.Not_Found);
         }
 
-        user.setStatus(UserStatus.Verified);
-        user.setDateVerified(new Date());
-        user.setVerified(true);
-        repository.save(user);
+        appUser.setStatus(UserStatus.Verified);
+        appUser.setDateVerified(new Date());
+        appUserRepository.save(appUser);
         //emailService.sendVerificationConfirmationEmail(user);
         return new BaseResponse(ResponseCode.Success);
     }
 
     @Override
     public BaseResponse deactivateUser(Long id) {
-        User user = findUserById(id);
-        if (user == null) {
+        AppUser appUser = findUserById(id);
+        if (appUser == null) {
             return new BaseResponse(ResponseCode.Not_Found);
         }
 
-        user.setStatus(UserStatus.Deactivated);
-        repository.save(user);
+        appUser.setStatus(UserStatus.Deactivated);
+        appUserRepository.save(appUser);
         //emailService.sendDeactivationEmail(user);
         return new BaseResponse(ResponseCode.Success);
     }
+
 }

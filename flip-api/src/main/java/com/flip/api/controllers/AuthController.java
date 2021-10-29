@@ -1,6 +1,6 @@
 package com.flip.api.controllers;
 
-import com.flip.data.entity.User;
+import com.flip.data.entity.AppUser;
 import com.flip.data.enums.ResponseCode;
 import com.flip.pojo.request.UserRequest;
 import com.flip.pojo.response.BaseResponse;
@@ -32,8 +32,8 @@ public class AuthController {
     private int pageSize;
 
     @GetMapping("/users/{page}/{size}")
-    public List<User> getUsers(@PathVariable("page") int page,
-                               @PathVariable("size") int size){
+    public List<AppUser> getUsers(@PathVariable("page") int page,
+                                  @PathVariable("size") int size){
         size = size == 0 ? pageSize : size;
         return userService.getAllActiveUsers(page, size);
     }
@@ -49,7 +49,7 @@ public class AuthController {
         }
 
         try {
-            response = userService.saveUser(userRequest);
+            response = userService.saveAppUser(userRequest);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new BaseResponse(ResponseCode.Internal_Server_Error), HttpStatus.INTERNAL_SERVER_ERROR);

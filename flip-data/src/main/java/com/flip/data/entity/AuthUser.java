@@ -3,12 +3,12 @@ package com.flip.data.entity;
 import com.flip.data.enums.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * @author Charles on 12/06/2021
@@ -16,95 +16,59 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "users")
-public class User extends BaseEntity, org.springframework.security.core.userdetails.User {
+@Table(name = "auth_users")
+public class AuthUser extends User implements Serializable {
 
-    @Column(name = "title")
-    private String title;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column(name = "date_deleted")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateDeleted;
 
-    @Column(name = "middle_name")
-    private String middleName;
+    @Column(name = "date_created")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateCreated = new Date();
 
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "email", unique = true)
-    private String email;
-
-    @Column(name = "password")
-    private String password;
+    @Column(name = "date_updated")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateUpdated;
 
     @Column(name = "reset_password")
     private boolean resetPassword = false;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
-    @Column(name = "avatar")
-    private String avatar;
-
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
-    @JoinTable(name = "user_role_mapping",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "role_id") })
-    private Set<Role> userRoles = new HashSet<>();
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
-
-    @Column(name = "date_verified")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateVerified;
-
-    @Column(name = "verification_code")
-    private String verificationCode;
-
-    @Column(name = "is_verified")
-    private boolean verified = false;
-
-    @Column(name = "is_account_blocked")
-    private boolean accountBlocked = false;
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
+    @JoinColumn(name = "created_by")
+    private AuthUser createdBy;
 
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Address.class)
-    @JoinColumn(name="user_fk")
-    private Set<Address> addresses = new HashSet<>();
-
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
-    @JoinColumn(name = "created_by")
-    private User createdBy;
-
-    public boolean addRole(Role role) {
-        return this.userRoles.add(role);
-    }
-
-    public boolean removeRole(Role role) {
-        return this.userRoles.remove(role);
-    }
+    @JoinColumn(name="auth_user_fk")
+    private Set<AppUser> appUsers = new HashSet<>();
 
     @Override
     public boolean equals(Object object) {
-        return (object instanceof User && ((User) object).getId().equals(this.getId()));
+        return (object instanceof AuthUser && ((AuthUser) object).getId().equals(this.getId()));
     }
 
-    public User() { }
+    public AuthUser() {
+        super("", "", new ArrayList<>());
+    }
 
-    public User(Long id, String title, String firstName, String lastName, String email, String mobile, String password,
-                List<Role> roles, Date dateVerified, boolean verified, UserStatus status, User createdBy) {
-        this.setId(id);
-        this.title = title;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumber = mobile;
-        this.password = password;
-        this.userRoles = new HashSet<>(roles);
-        this.dateVerified = dateVerified;
-        this.verified = verified;
-        this.status = status;
+    public AuthUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+        super(username, password, authorities);
+    }
+
+    public AuthUser(String username, String password, Collection<? extends GrantedAuthority> authorities, Long id, Date dateDeleted,
+                    Date dateCreated, Date dateUpdated, boolean resetPassword, AuthUser createdBy, Set<AppUser> appUsers) {
+        super(username, password, authorities);
+        this.id = id;
+        this.dateDeleted = dateDeleted;
+        this.dateCreated = dateCreated;
+        this.dateUpdated = dateUpdated;
+        this.resetPassword = resetPassword;
         this.createdBy = createdBy;
+        this.appUsers = appUsers;
     }
 }

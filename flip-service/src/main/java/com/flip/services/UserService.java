@@ -1,23 +1,30 @@
 package com.flip.services;
 
-import com.flip.data.entity.User;
+import com.flip.data.entity.AppUser;
 import com.flip.pojo.request.UserRequest;
 import com.flip.pojo.response.BaseResponse;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 
 /**
  * @author Charles on 23/06/2021
  */
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
-    User findUserById(Long id);
+    AppUser findUserById(Long id);
 
-    List<User> getAllActiveUsers(int page, int size);
+    UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException;
 
-    BaseResponse saveUser(UserRequest userRequest);
+    List<AppUser> getAllActiveUsers(int page, int size);
+
+    BaseResponse saveAppUser(UserRequest userRequest);
 
     BaseResponse updateUser(Long id, UserRequest userRequest);
+
+    BaseResponse initiateUserVerification(Long userId);
 
     BaseResponse verifyUser(String code);
 

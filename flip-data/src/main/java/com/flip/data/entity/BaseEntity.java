@@ -20,8 +20,9 @@ public abstract class BaseEntity implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "deleted")
-    private boolean deleted = false;
+    @Column(name = "date_deleted")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateDeleted;
 
     @Column(name = "date_created")
     @Temporal(TemporalType.TIMESTAMP)
