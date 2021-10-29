@@ -17,7 +17,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "users")
-public class User extends BaseEntity {
+public class User extends BaseEntity, org.springframework.security.core.userdetails.User {
 
     @Column(name = "title")
     private String title;
