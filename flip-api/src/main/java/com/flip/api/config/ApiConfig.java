@@ -1,6 +1,6 @@
 package com.flip.api.config;
 
-import com.flip.config.ServiceConfig;
+import com.flip.service.config.ServiceConfig;
 import com.flip.data.config.DataConfig;
 
 import org.springframework.context.annotation.Bean;

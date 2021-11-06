@@ -1,4 +1,4 @@
-package com.flip.pojo.response;
+package com.flip.service.pojo.response;
 
 import com.flip.data.enums.ResponseCode;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.flip.services.impl;
+package com.flip.service.services.impl;
 
 import com.flip.data.entity.AppUser;
 import com.flip.data.entity.AuthUser;
@@ -7,10 +7,10 @@ import com.flip.data.enums.UserStatus;
 import com.flip.data.repository.AppUserRepository;
 import com.flip.data.repository.AuthUserRepository;
 import com.flip.data.repository.RoleRepository;
-import com.flip.pojo.request.UserRequest;
-import com.flip.pojo.response.BaseResponse;
-import com.flip.services.UserService;
-import com.flip.util.RefUtil;
+import com.flip.service.pojo.request.UserRequest;
+import com.flip.service.pojo.response.BaseResponse;
+import com.flip.service.services.UserService;
+import com.flip.service.util.RefUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

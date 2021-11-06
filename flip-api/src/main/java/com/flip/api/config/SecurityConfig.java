@@ -1,6 +1,6 @@
 package com.flip.api.config;
 
-import com.flip.services.UserService;
+import com.flip.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

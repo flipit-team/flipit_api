@@ -1,8 +1,8 @@
-package com.flip.services;
+package com.flip.service.services;
 
 import com.flip.data.entity.AppUser;
-import com.flip.pojo.request.UserRequest;
-import com.flip.pojo.response.BaseResponse;
+import com.flip.service.pojo.request.UserRequest;
+import com.flip.service.pojo.response.BaseResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,4 +1,4 @@
-package com.flip.pojo.request;
+package com.flip.service.pojo.request;
 
 import org.springframework.stereotype.Component;
 

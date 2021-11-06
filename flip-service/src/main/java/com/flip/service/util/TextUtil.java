@@ -1,4 +1,4 @@
-package com.flip.util;
+package com.flip.service.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

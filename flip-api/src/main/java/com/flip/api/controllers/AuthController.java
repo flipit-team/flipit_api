@@ -2,10 +2,10 @@ package com.flip.api.controllers;
 
 import com.flip.data.entity.AppUser;
 import com.flip.data.enums.ResponseCode;
-import com.flip.pojo.request.UserRequest;
-import com.flip.pojo.response.BaseResponse;
-import com.flip.services.UserService;
-import com.flip.util.ErrorUtil;
+import com.flip.service.pojo.request.UserRequest;
+import com.flip.service.pojo.response.BaseResponse;
+import com.flip.service.services.UserService;
+import com.flip.service.util.ErrorUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package com.flip.util;
+package com.flip.service.util;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
