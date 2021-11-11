@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "auth_users")
+@Table(name = "app_users")
 public class AppUser extends BaseEntity {
 
     @Column(name = "title")
