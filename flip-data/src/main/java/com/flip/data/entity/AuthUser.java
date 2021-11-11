@@ -1,13 +1,12 @@
 package com.flip.data.entity;
 
-import com.flip.data.enums.UserStatus;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -17,7 +16,7 @@ import java.util.*;
 @Getter
 @Setter
 @Table(name = "auth_users")
-public class AuthUser extends User implements Serializable {
+public class AuthUser extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,13 +46,22 @@ public class AuthUser extends User implements Serializable {
     @JoinColumn(name="auth_user_fk")
     private Set<AppUser> appUsers = new HashSet<>();
 
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "username")
+	private String username;
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
     @Override
     public boolean equals(Object object) {
         return (object instanceof AuthUser && ((AuthUser) object).getId().equals(this.getId()));
     }
 
     public AuthUser() {
-        super("", "", new ArrayList<>());
+        super("a", "b", new ArrayList<>());
     }
 
     public AuthUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
