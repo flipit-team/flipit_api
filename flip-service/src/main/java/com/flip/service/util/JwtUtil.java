@@ -5,9 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +15,7 @@ import java.util.function.Function;
 /**
  * @author Charles on 26/11/2021
  */
-@Component
+@Service
 public class JwtUtil {
 
     @Value("${secret_key}")
