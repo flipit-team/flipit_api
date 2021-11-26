@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        return new AuthUser();
+        return authUserRepository.findByUsername(userName);
     }
 
     @Override

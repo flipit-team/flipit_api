@@ -59,7 +59,7 @@ public class AuthUser extends User {
         return (object instanceof AuthUser && ((AuthUser) object).getId().equals(this.getId()));
     }
 
-    public AuthUser() {
+    private AuthUser() {
         super("a", "b", new ArrayList<>());
     }
 
