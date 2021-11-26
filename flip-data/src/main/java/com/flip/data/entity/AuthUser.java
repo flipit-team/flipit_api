@@ -52,7 +52,7 @@ public class AuthUser extends User {
 	private String username;
 
     @Column(name = "enabled")
-    private boolean enabled;
+    private boolean enabled = true;
 
     @Override
     public boolean equals(Object object) {
