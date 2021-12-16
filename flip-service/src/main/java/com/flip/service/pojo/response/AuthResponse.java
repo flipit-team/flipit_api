@@ -1,6 +1,5 @@
 package com.flip.service.pojo.response;
 
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,7 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthResponse {
 
-    private final String jwt;
+    private String jwt;
+
+    private AuthResponse() {}
 
     public AuthResponse(String jwt) {
         this.jwt = jwt;

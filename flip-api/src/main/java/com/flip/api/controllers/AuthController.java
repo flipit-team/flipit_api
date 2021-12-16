@@ -1,29 +1,21 @@
 package com.flip.api.controllers;
 
-import com.flip.data.entity.AppUser;
 import com.flip.data.enums.ResponseCode;
 import com.flip.service.pojo.request.AuthRequest;
-import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.pojo.response.AuthResponse;
 import com.flip.service.pojo.response.BaseResponse;
 import com.flip.service.services.UserService;
-import com.flip.service.util.ErrorUtil;
 import com.flip.service.util.JwtUtil;
 import lombok.extern.log4j.Log4j2;
-import org.aspectj.weaver.bcel.ExceptionRange;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author Charles on 21/06/2021
