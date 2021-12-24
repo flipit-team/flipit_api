@@ -8,7 +8,6 @@ import com.flip.service.services.UserService;
 import com.flip.service.util.JwtUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,7 +40,8 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         } catch(BadCredentialsException e){
-            throw new Exception("Invalid username or password", e);
+            //throw new Exception("Invalid username or password", e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
 
         final UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
@@ -55,7 +55,8 @@ public class AuthController {
             BaseResponse response = userService.verifyUser(code);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new BaseResponse(ResponseCode.Internal_Server_Error), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new BaseResponse(ResponseCode.Internal_Server_Error),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

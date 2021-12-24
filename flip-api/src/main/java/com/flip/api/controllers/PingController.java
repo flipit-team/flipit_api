@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 public class PingController {
 
-    @GetMapping({"/hello", "/"})
+    @GetMapping({"/"})
     public String ping(){
         return "Responding...";
     }
