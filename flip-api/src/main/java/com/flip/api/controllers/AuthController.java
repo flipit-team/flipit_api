@@ -40,8 +40,8 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         } catch(BadCredentialsException e){
-            //throw new Exception("Invalid username or password", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            throw new Exception("Invalid username or password", e);
+            //return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
 
         final UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
