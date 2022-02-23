@@ -18,4 +18,9 @@ public class PingController {
         return "Responding...";
     }
 
+    @GetMapping({"/hello"})
+    public String hello(){
+        return "Responding with authorization...";
+    }
+
 }
