@@ -39,6 +39,9 @@ public class AppUser extends BaseEntity {
     @Column(name = "avatar")
     private String avatar;
 
+    @Column(name = "bvn")
+    private String bvn;
+
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
     @JoinColumn(name = "auth_user_fk", nullable = false)
     private AuthUser authUser;
@@ -66,6 +69,10 @@ public class AppUser extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Address.class)
     @JoinColumn(name="app_user_fk")
     private Set<Address> addresses = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Address.class)
+    @JoinColumn(name="app_user_fk")
+    private Set<UserIdentification> userIdentifications = new HashSet<>();
 
     public boolean addRole(Role role) {
         return this.userRoles.add(role);
