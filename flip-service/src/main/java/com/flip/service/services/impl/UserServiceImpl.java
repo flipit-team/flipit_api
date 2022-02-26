@@ -1,7 +1,9 @@
 package com.flip.service.services.impl;
 
 import com.flip.data.entity.AppUser;
+import com.flip.data.entity.AuthCode;
 import com.flip.data.entity.AuthUser;
+import com.flip.data.enums.CodeType;
 import com.flip.data.enums.ResponseCode;
 import com.flip.data.enums.UserStatus;
 import com.flip.data.repository.AppUserRepository;
@@ -9,8 +11,8 @@ import com.flip.data.repository.AuthUserRepository;
 import com.flip.data.repository.RoleRepository;
 import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.pojo.response.BaseResponse;
+import com.flip.service.services.AuthCodeService;
 import com.flip.service.services.UserService;
-import com.flip.service.util.RefUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private AuthCodeService authCodeService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -117,22 +122,28 @@ public class UserServiceImpl implements UserService {
             return new BaseResponse(ResponseCode.Not_Found);
         }
 
-        appUser.setVerificationCode(RefUtil.generateUniqueRef());
-        appUserRepository.save(appUser);
+        authCodeService.createAuthCode(appUser, CodeType.Verification);
         //emailService.sendVerificationInitiationEmail(user);
         return new BaseResponse(ResponseCode.Success);
     }
 
     @Override
-    public BaseResponse verifyUser(String code) {
-        AppUser appUser = appUserRepository.findUserByVerificationCode(code);
+    @Transactional
+    public BaseResponse verifyUser(Long userId, String code) {
+        AppUser appUser = appUserRepository.findAppUserById(userId);
         if (appUser == null) {
             return new BaseResponse(ResponseCode.Not_Found);
+        }
+
+        AuthCode authCode = authCodeService.findAuthCode(userId, CodeType.Verification, code);
+        if (authCode == null) {
+            return new BaseResponse(ResponseCode.Invalid_Code);
         }
 
         appUser.setStatus(UserStatus.Verified);
         appUser.setDateVerified(new Date());
         appUserRepository.save(appUser);
+        authCodeService.expireCode(authCode);
         //emailService.sendVerificationConfirmationEmail(user);
         return new BaseResponse(ResponseCode.Success);
     }

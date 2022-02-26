@@ -49,10 +49,11 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(jwt));
     }
 
-    @GetMapping("/verify/{code}")
-    public ResponseEntity<BaseResponse> verifyUser(@PathVariable("code") String code) {
+    @GetMapping("/verify/{userId}/{code}")
+    public ResponseEntity<BaseResponse> verifyUser(@PathVariable("userId") Long userId,
+                                                   @PathVariable("code") String code) {
         try {
-            BaseResponse response = userService.verifyUser(code);
+            BaseResponse response = userService.verifyUser(userId, code);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new BaseResponse(ResponseCode.Internal_Server_Error),

@@ -60,9 +60,6 @@ public class AppUser extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateVerified;
 
-    @Column(name = "verification_code")
-    private String verificationCode;
-
     @Column(name = "is_account_blocked")
     private boolean accountBlocked = false;
 
@@ -96,7 +93,7 @@ public class AppUser extends BaseEntity {
 
     public AppUser(String title, String firstName, String middleName, String lastName, String email, String phoneNumber,
                    String avatar, AuthUser authUser, Set<Role> userRoles, UserStatus status, Date dateVerified,
-                   String verificationCode, boolean accountBlocked, Set<Address> addresses) {
+                   boolean accountBlocked, Set<Address> addresses) {
         this.title = title;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -108,7 +105,6 @@ public class AppUser extends BaseEntity {
         this.userRoles = userRoles;
         this.status = status;
         this.dateVerified = dateVerified;
-        this.verificationCode = verificationCode;
         this.accountBlocked = accountBlocked;
         this.addresses = addresses;
     }

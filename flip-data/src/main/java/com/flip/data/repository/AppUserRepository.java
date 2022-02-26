@@ -33,6 +33,4 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     Page<AppUser> findByStatus(String status, Pageable pageable);
 
-    @Query("select u from AppUser u where u.verificationCode = :code")
-    AppUser findUserByVerificationCode(@Param("code") String code);
 }
