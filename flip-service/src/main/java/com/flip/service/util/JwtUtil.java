@@ -22,7 +22,7 @@ public class JwtUtil {
     private String SECRET_KEY;
 
     @Value("${token_expiry_sec}")
-    private int tokenExpirySec;
+    private long tokenExpirySec;
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
@@ -42,7 +42,8 @@ public class JwtUtil {
     }
 
     private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        boolean tokenExpired = extractExpiration(token).before(new Date());
+        return tokenExpired;
     }
 
     public String generateToken(UserDetails userDetails) {
