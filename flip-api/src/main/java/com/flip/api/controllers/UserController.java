@@ -38,7 +38,7 @@ public class UserController {
         return userService.getAllActiveUsers(page, size);
     }
 
-    @PostMapping("/user")
+    @PostMapping("/user/signup")
     public ResponseEntity<BaseResponse> saveUser(@Valid @RequestBody UserRequest userRequest,
                                                  Errors errors) {
         BaseResponse response;
