@@ -49,7 +49,7 @@ public class DataConfig {
         jpaPropertyMap.put("hibernate.hikari.dataSource.user", env.getProperty("flipi.jdbc.username"));
         jpaPropertyMap.put("hibernate.hikari.dataSource.password", env.getProperty("flipi.jdbc.password"));
         jpaPropertyMap.put("hibernate.hikari.dataSourceClassName", env.getProperty("flipi.jdbc.datasource.class"));
-        jpaPropertyMap.put("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
+        jpaPropertyMap.put("hibernate.connection.provider_class", env.getProperty("hibernate.provider_class"));
         jpaPropertyMap.put("hibernate.hikari.maxLifetime", env.getProperty("flipi.jdbc.maxLifetime"));
         jpaPropertyMap.put("hibernate.hikari.idleTimeout", env.getProperty("flipi.jdbc.maxidletime"));
         jpaPropertyMap.put("hibernate.hikari.connectionTimeout", env.getProperty("flipi.jdbc.connectTimeout"));
