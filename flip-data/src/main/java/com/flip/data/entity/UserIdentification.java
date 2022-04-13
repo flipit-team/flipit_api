@@ -21,7 +21,7 @@ public class UserIdentification extends BaseEntity {
     @Column(name = "thumbnail")
     private String thumbnail;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AppUser.class)
     @JoinColumn(name = "app_user_fk", nullable = false)
     private AppUser appUser;
 

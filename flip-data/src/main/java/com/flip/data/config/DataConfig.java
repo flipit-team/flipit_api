@@ -1,8 +1,11 @@
 package com.flip.data.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -10,11 +13,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.SharedCacheMode;
@@ -22,9 +25,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@EnableJpaRepositories(basePackages ={"com.flip.data"})
-@EntityScan(basePackages = {"com.flip.data"})
+@EnableTransactionManagement
 @ComponentScan(basePackages = {"com.flip.data"})
+@EntityScan(basePackages = {"com.flip.data.entity"})
+@EnableJpaRepositories(
+        basePackages = {"com.flip.data.repository"},
+        transactionManagerRef = "txManage")
 public class DataConfig {
 
     @Autowired
@@ -34,9 +40,9 @@ public class DataConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setPersistenceUnitName("flipiPU");
-        em.setPackagesToScan(new String[]{"com.flip.data.entity"});
-        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        ((HibernateJpaVendorAdapter) vendorAdapter).setDatabasePlatform(env.getProperty("hibernate.dialect"));
+        em.setPackagesToScan("com.flip.data.entity");
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setDatabasePlatform(env.getProperty("hibernate.dialect"));
         em.setJpaVendorAdapter(vendorAdapter);
         em.setSharedCacheMode(SharedCacheMode.ENABLE_SELECTIVE);
         Map<String,Object> jpaPropertyMap = new HashMap<>();
