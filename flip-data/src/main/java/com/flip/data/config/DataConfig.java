@@ -1,11 +1,8 @@
 package com.flip.data.config;
 
-import com.zaxxer.hikari.HikariDataSource;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +25,7 @@ import java.util.Map;
 @EnableTransactionManagement
 @ComponentScan(basePackages = {"com.flip.data"})
 @EntityScan(basePackages = {"com.flip.data.entity"})
-@EnableJpaRepositories(
-        basePackages = {"com.flip.data.repository"},
-        transactionManagerRef = "txManage")
+@EnableJpaRepositories(basePackages = {"com.flip.data.repository"}, transactionManagerRef = "txManage")
 public class DataConfig {
 
     @Autowired

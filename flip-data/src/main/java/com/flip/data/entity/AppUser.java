@@ -84,8 +84,7 @@ public class AppUser extends BaseEntity {
         return (object instanceof AppUser && ((AppUser) object).getId().equals(this.getId()));
     }
 
-    public AppUser() {
-    }
+    public AppUser() { }
 
     public AppUser(AuthUser authUser) {
         this.setAuthUser(authUser);
