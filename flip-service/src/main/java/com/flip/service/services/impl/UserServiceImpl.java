@@ -67,8 +67,7 @@ public class UserServiceImpl implements UserService {
         Page<AppUser> userPage = appUserRepository.findAllActiveUsers(pageable);
         userPage.forEach(x ->
                 x.getAuthUser().eraseCredentials());
-        List<AppUser> appUsers = userPage.getContent();
-        return appUsers;
+        return userPage.getContent();
     }
 
     @Override

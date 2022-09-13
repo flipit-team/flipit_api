@@ -1,6 +1,7 @@
 package com.flip.data.util;
 
-import org.springframework.util.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Obi on 10/05/2019

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 //import com.flip.data.config.DataConfig;
 
 @Configuration
-@ComponentScan(basePackages = {"com.flip.service.services"})
+@ComponentScan(basePackages = {"com.flip.service"})
 public class ServiceConfig {
     
 }
