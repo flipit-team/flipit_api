@@ -2,8 +2,6 @@ package com.flip.service.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,8 +45,7 @@ public class JwtUtil {
     }
 
     private Boolean isTokenExpired(String token) {
-        boolean tokenExpired = extractExpiration(token).before(new Date());
-        return tokenExpired;
+        return extractExpiration(token).before(new Date());
     }
 
     public String generateToken(UserDetails userDetails) {
