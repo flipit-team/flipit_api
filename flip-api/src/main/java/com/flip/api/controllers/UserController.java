@@ -31,14 +31,14 @@ public class UserController {
     @Value("${page.size}")
     private int pageSize;
 
-    @GetMapping("/users/{page}/{size}")
+    @GetMapping("/{page}/{size}")
     public List<AppUser> getUsers(@PathVariable("page") int page,
                                   @PathVariable("size") int size){
         size = size == 0 ? pageSize : size;
         return userService.getAllActiveUsers(page, size);
     }
 
-    @PostMapping("/user/signup")
+    @PostMapping("/signup")
     public ResponseEntity<BaseResponse> saveUser(@Valid @RequestBody UserRequest userRequest,
                                                  Errors errors) {
         BaseResponse response;
@@ -56,7 +56,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<BaseResponse> updateUser(@RequestBody UserRequest userRequest,
                                                    @PathVariable("id") Long id) {
         try {
@@ -67,7 +67,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponse> deleteUser(@PathVariable("id") Long id){
         try {
             BaseResponse response = userService.deactivateUser(id);

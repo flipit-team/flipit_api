@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().mvcMatchers("/api/v1/auth/authenticate", "/").permitAll()
+                .authorizeRequests().antMatchers("/api/v1/auth/authenticate", "/", "/swagger-ui/").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -60,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    // fix endpoint mappings
     @Bean
     public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(
             WebEndpointsSupplier webEndpointsSupplier,
@@ -77,8 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         allEndpoints.addAll(controllerEndpointsSupplier.getEndpoints());
         String basePath = webEndpointProperties.getBasePath();
         EndpointMapping endpointMapping = new EndpointMapping(basePath);
-        boolean shouldRegisterLinksMapping = this.shouldRegisterLinksMapping(
-                webEndpointProperties, environment, basePath);
+        boolean shouldRegisterLinksMapping = this.shouldRegisterLinksMapping(webEndpointProperties, environment, basePath);
         return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints,
                 endpointMediaTypes, corsProperties.toCorsConfiguration(),
                 new EndpointLinksResolver(allEndpoints, basePath),
