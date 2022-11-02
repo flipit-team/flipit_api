@@ -5,13 +5,11 @@ import com.flip.data.enums.ResponseCode;
 import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.pojo.response.BaseResponse;
 import com.flip.service.services.UserService;
-import com.flip.service.util.ErrorUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,42 +31,37 @@ public class UserController {
 
     @GetMapping("/{page}/{size}")
     public List<AppUser> getUsers(@PathVariable("page") int page,
-                                  @PathVariable("size") int size){
+                                  @PathVariable("size") int size) {
         size = size == 0 ? pageSize : size;
         return userService.getAllActiveUsers(page, size);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<BaseResponse> saveUser(@Valid @RequestBody UserRequest userRequest,
-                                                 Errors errors) {
-        BaseResponse response;
-        if(errors.hasErrors()) {
+    public AppUser saveUser(@Valid @RequestBody UserRequest userRequest) throws Exception {
+        /*BaseResponse response;
+        if (errors.hasErrors()) {
             response = new BaseResponse(ResponseCode.Bad_Request);
             response.setResponseMessage(ErrorUtil.getResponseMessage(errors));
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+        }*/
 
-        try {
-            response = userService.saveAppUser(userRequest);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new BaseResponse(ResponseCode.Internal_Server_Error), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return userService.saveAppUser(userRequest);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponse> updateUser(@RequestBody UserRequest userRequest,
+    public AppUser updateUser(@RequestBody UserRequest userRequest,
                                                    @PathVariable("id") Long id) {
-        try {
+        return userService.updateUser(id, userRequest);
+        /*try {
             BaseResponse response = userService.updateUser(id, userRequest);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new BaseResponse(ResponseCode.Internal_Server_Error), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        }*/
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponse> deleteUser(@PathVariable("id") Long id){
+    public ResponseEntity<BaseResponse> deleteUser(@PathVariable("id") Long id) {
         try {
             BaseResponse response = userService.deactivateUser(id);
             return new ResponseEntity<>(response, HttpStatus.OK);

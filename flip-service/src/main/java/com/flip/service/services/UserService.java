@@ -20,9 +20,9 @@ public interface UserService extends UserDetailsService {
 
     List<AppUser> getAllActiveUsers(int page, int size);
 
-    BaseResponse saveAppUser(UserRequest userRequest);
+    AppUser saveAppUser(UserRequest userRequest) throws Exception;
 
-    BaseResponse updateUser(Long id, UserRequest userRequest);
+    AppUser updateUser(Long id, UserRequest userRequest);
 
     BaseResponse initiateUserVerification(Long userId);
 

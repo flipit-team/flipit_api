@@ -9,6 +9,8 @@ import com.flip.data.enums.UserStatus;
 import com.flip.data.repository.AppUserRepository;
 import com.flip.data.repository.AuthUserRepository;
 import com.flip.data.repository.RoleRepository;
+import com.flip.service.exception.EntityNotFoundException;
+import com.flip.service.exception.UserExistsException;
 import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.pojo.response.BaseResponse;
 import com.flip.service.services.AuthCodeService;
@@ -72,15 +74,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public BaseResponse saveAppUser(UserRequest userRequest) {
+    public AppUser saveAppUser(UserRequest userRequest) throws Exception {
         if (appUserRepository.findByEmail(userRequest.getEmail()) != null ||
                 authUserRepository.findByUsername(userRequest.getEmail()) != null) {
-            return new BaseResponse(ResponseCode.Bad_Request.getCode(), "A user with this email already exists.");
+            throw new UserExistsException(userRequest.getEmail());
         }
-        if (authUserRepository.findByUsername(userRequest.getEmail()) != null) {
-            return new BaseResponse(ResponseCode.Bad_Request.getCode(), "A user with this email already exists.");
-        }
-
         AuthUser authUser = new AuthUser(userRequest.getEmail(), passwordEncoder.encode(userRequest.getPassword()), null);
         AppUser appUser = new AppUser(authUser);
         BeanUtils.copyProperties(userRequest, appUser);
@@ -88,19 +86,19 @@ public class UserServiceImpl implements UserService {
         authUserRepository.save(authUser);
         appUserRepository.save(appUser);
         //emailService.sendAccountVerificationEmail(user);
-        return new BaseResponse(ResponseCode.Success);
+        return appUser;
     }
 
     @Override
-    public BaseResponse updateUser(Long id, UserRequest userRequest) {
+    public AppUser updateUser(Long id, UserRequest userRequest) {
         AppUser appUser = findUserById(id);
         if (appUser == null) {
-            return new BaseResponse(ResponseCode.Not_Found);
+            throw new EntityNotFoundException(AppUser.class, "id", id.toString());
         }
 
         AppUser emailAppUser = appUserRepository.findByEmail(userRequest.getEmail());
         if (emailAppUser != null && !emailAppUser.getId().equals(appUser.getId())) {
-            return new BaseResponse(ResponseCode.Bad_Request.getCode(), "A user with this email already exists.");
+            throw new UserExistsException(userRequest.getEmail());
         }
 
         appUser.setTitle(userRequest.getTitle());
@@ -110,7 +108,7 @@ public class UserServiceImpl implements UserService {
         appUser.setPhoneNumber(userRequest.getMobile());
         appUser.setUserRoles(new HashSet<>(roleRepository.getRolesByIdIn(userRequest.getRoleIds())));
         appUserRepository.save(appUser);
-        return new BaseResponse(ResponseCode.Success);
+        return appUser;
     }
 
     @Override

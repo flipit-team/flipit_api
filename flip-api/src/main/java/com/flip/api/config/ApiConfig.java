@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @Import(value = {DataConfig.class, ServiceConfig.class})
 @ComponentScan(basePackages = {"com.flip.api"})
-public class ApiConfig /*extends WebMvcConfigurerAdapter*/ {
+public class ApiConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
