@@ -2,6 +2,7 @@ package com.flip.data.repository;
 
 import com.flip.data.entity.AuthUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Charles on 20/06/2021

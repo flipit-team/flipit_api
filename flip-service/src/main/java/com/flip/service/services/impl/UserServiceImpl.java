@@ -5,7 +5,6 @@ import com.flip.data.entity.AuthCode;
 import com.flip.data.entity.AuthUser;
 import com.flip.data.enums.CodeType;
 import com.flip.data.enums.ResponseCode;
-import com.flip.data.enums.RoleType;
 import com.flip.data.enums.UserStatus;
 import com.flip.data.repository.AppUserRepository;
 import com.flip.data.repository.AuthUserRepository;
@@ -80,6 +79,7 @@ public class UserServiceImpl implements UserService {
                 authUserRepository.findByUsername(userRequest.getEmail()) != null) {
             throw new UserExistsException(userRequest.getEmail());
         }
+
         AuthUser authUser = new AuthUser(userRequest.getEmail(), passwordEncoder.encode(userRequest.getPassword()), new ArrayList<>());
         AppUser appUser = new AppUser(authUser);
         BeanUtils.copyProperties(userRequest, appUser);
