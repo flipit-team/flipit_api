@@ -78,4 +78,5 @@ public class AuthUser extends User {
         this.createdBy = createdBy;
         this.appUsers = appUsers;
     }
+
 }

@@ -13,13 +13,12 @@ public enum RoleType {
 
     SUPER_ADMIN("Super-Admin"),
     ADMIN("Admin"),
-    USER("User"),
-    ;
+    USER("User");
 
     @Getter
     private String screenName;
 
-    RoleType(String screenName){
+    RoleType(String screenName) {
         this.screenName = screenName;
     }
 
