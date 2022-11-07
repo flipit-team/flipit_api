@@ -1,5 +1,6 @@
 package com.flip.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flip.data.enums.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,16 +43,6 @@ public class AppUser extends BaseEntity {
     @Column(name = "bvn")
     private String bvn;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
-    @JoinColumn(name = "auth_user_fk", nullable = false)
-    private AuthUser authUser;
-
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
-    @JoinTable(name = "user_role_mapping",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "role_id") })
-    private Set<Role> userRoles = new HashSet<>();
-
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private UserStatus status;
@@ -63,11 +54,24 @@ public class AppUser extends BaseEntity {
     @Column(name = "is_account_blocked")
     private boolean accountBlocked = false;
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
+    @JoinColumn(name = "auth_user_fk")
+    private AuthUser authUser;
+
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
+    @JoinTable(name = "user_role_mapping",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") })
+    private Set<Role> userRoles = new HashSet<>();
+
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Address.class)
     @JoinColumn(name="app_user_fk")
     private Set<Address> addresses = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Address.class)
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = UserIdentification.class)
     @JoinColumn(name="app_user_fk")
     private Set<UserIdentification> userIdentifications = new HashSet<>();
 

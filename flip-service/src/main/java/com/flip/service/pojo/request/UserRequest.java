@@ -26,6 +26,8 @@ public class UserRequest implements Serializable {
     @NotBlank(message = "First name is required")
     private String firstName;
 
+    private String middleName;
+
     @NotBlank(message = "Last name is required")
     private String lastName;
 
@@ -44,9 +46,11 @@ public class UserRequest implements Serializable {
 
     public UserRequest() {}
 
-    public UserRequest(String title, String firstName, String lastName, String email, String mobile, String password, List<Long> roleIds, boolean verified) {
+    public UserRequest(String title, String firstName, String middleName, String lastName, String email, String mobile,
+                       String password, List<Long> roleIds, boolean verified) {
         this.title = title;
         this.firstName = firstName;
+        this.middleName = middleName;
         this.lastName = lastName;
         this.email = email;
         this.mobile = mobile;

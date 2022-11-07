@@ -38,26 +38,12 @@ public class UserController {
 
     @PostMapping("/signup")
     public AppUser saveUser(@Valid @RequestBody UserRequest userRequest) throws Exception {
-        /*BaseResponse response;
-        if (errors.hasErrors()) {
-            response = new BaseResponse(ResponseCode.Bad_Request);
-            response.setResponseMessage(ErrorUtil.getResponseMessage(errors));
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }*/
-
         return userService.saveAppUser(userRequest);
     }
 
     @PutMapping("/{id}")
-    public AppUser updateUser(@RequestBody UserRequest userRequest,
-                                                   @PathVariable("id") Long id) {
+    public AppUser updateUser(@RequestBody UserRequest userRequest, @PathVariable("id") Long id) {
         return userService.updateUser(id, userRequest);
-        /*try {
-            BaseResponse response = userService.updateUser(id, userRequest);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new BaseResponse(ResponseCode.Internal_Server_Error), HttpStatus.INTERNAL_SERVER_ERROR);
-        }*/
     }
 
     @DeleteMapping("/{id}")

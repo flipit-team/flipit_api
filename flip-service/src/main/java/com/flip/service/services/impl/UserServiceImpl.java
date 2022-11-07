@@ -104,8 +104,8 @@ public class UserServiceImpl implements UserService {
 
         appUser.setTitle(userRequest.getTitle());
         appUser.setFirstName(userRequest.getFirstName());
+        appUser.setMiddleName(userRequest.getMiddleName());
         appUser.setLastName(userRequest.getLastName());
-        appUser.setEmail(userRequest.getEmail());
         appUser.setPhoneNumber(userRequest.getMobile());
         appUser.setUserRoles(new HashSet<>(roleRepository.getRolesByIdIn(userRequest.getRoleIds())));
         appUserRepository.save(appUser);
