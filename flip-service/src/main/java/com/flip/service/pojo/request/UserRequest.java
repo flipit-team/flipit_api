@@ -35,7 +35,7 @@ public class UserRequest implements Serializable {
     @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")
     private String email;
 
-    private String mobile;
+    private String phoneNumber;
 
     @NotBlank(message = "Password is required")
     private String password;
@@ -46,14 +46,14 @@ public class UserRequest implements Serializable {
 
     public UserRequest() {}
 
-    public UserRequest(String title, String firstName, String middleName, String lastName, String email, String mobile,
-                       String password, List<Long> roleIds, boolean verified) {
+    public UserRequest(String title, String firstName, String middleName, String lastName, String email,
+                       String phoneNumber, String password, List<Long> roleIds, boolean verified) {
         this.title = title;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
         this.email = email;
-        this.mobile = mobile;
+        this.phoneNumber = phoneNumber;
         this.password = password;
         this.roleIds = roleIds;
         this.verified = verified;

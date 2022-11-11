@@ -60,7 +60,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        return new User("foo", "foo", new ArrayList<>()); //authUserRepository.findByUsername(userName);
+        //return new User("foo", "foo", new ArrayList<>());
+        AuthUser user = authUserRepository.findAuthUserByUsername(userName);
+        return user;
     }
 
     @Override
@@ -76,11 +78,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public AppUser saveAppUser(UserRequest userRequest) throws Exception {
         if (appUserRepository.findByEmail(userRequest.getEmail()) != null ||
-                authUserRepository.findByUsername(userRequest.getEmail()) != null) {
+                authUserRepository.findAuthUserByUsername(userRequest.getEmail()) != null) {
             throw new UserExistsException(userRequest.getEmail());
         }
 
-        AuthUser authUser = new AuthUser(userRequest.getEmail(), passwordEncoder.encode(userRequest.getPassword()), new ArrayList<>());
+        AuthUser authUser = new AuthUser(userRequest.getEmail(), passwordEncoder.encode(userRequest.getPassword()));
         AppUser appUser = new AppUser(authUser);
         BeanUtils.copyProperties(userRequest, appUser);
         appUser.setStatus(UserStatus.Registered);
@@ -102,11 +104,12 @@ public class UserServiceImpl implements UserService {
             throw new UserExistsException(userRequest.getEmail());
         }
 
-        appUser.setTitle(userRequest.getTitle());
+        BeanUtils.copyProperties(userRequest, appUser);
+        /*appUser.setTitle(userRequest.getTitle());
         appUser.setFirstName(userRequest.getFirstName());
         appUser.setMiddleName(userRequest.getMiddleName());
         appUser.setLastName(userRequest.getLastName());
-        appUser.setPhoneNumber(userRequest.getMobile());
+        appUser.setPhoneNumber(userRequest.getPhoneNumber());*/
         appUser.setUserRoles(new HashSet<>(roleRepository.getRolesByIdIn(userRequest.getRoleIds())));
         appUserRepository.save(appUser);
         return appUser;

@@ -2,8 +2,9 @@ package com.flip.data.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.*;
@@ -15,7 +16,7 @@ import java.util.*;
 @Getter
 @Setter
 @Table(name = "auth_users")
-public class AuthUser extends User {
+public class AuthUser implements UserDetails, CredentialsContainer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,18 +60,18 @@ public class AuthUser extends User {
         return (object instanceof AuthUser && ((AuthUser) object).getId().equals(this.getId()));
     }
 
-    protected AuthUser() {
-        super("a", "b", new ArrayList<>());
+    public AuthUser() {}
+
+    public AuthUser(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
-    public AuthUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
-    }
-
-    public AuthUser(String username, String password, Collection<? extends GrantedAuthority> authorities, Long id, Date dateDeleted,
-                    Date dateCreated, Date dateUpdated, boolean resetPassword, AuthUser createdBy, Set<AppUser> appUsers) {
-        super(username, password, authorities);
+    public AuthUser(String username, String password, Long id, Date dateDeleted, Date dateCreated, Date dateUpdated,
+                    boolean resetPassword, AuthUser createdBy, Set<AppUser> appUsers) {
         this.id = id;
+        this.username = username;
+        this.password = password;
         this.dateDeleted = dateDeleted;
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
@@ -79,4 +80,27 @@ public class AuthUser extends User {
         this.appUsers = appUsers;
     }
 
+    public void eraseCredentials() {
+        this.password = null;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.dateDeleted == null;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.enabled;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
 }
