@@ -37,9 +37,8 @@ public class AuthController {
     @PostMapping("/authenticate")
     public AuthResponse createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
         try {
-            authManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-            );
+            var auth = new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword());
+            authManager.authenticate(auth);
         } catch(AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");
         }

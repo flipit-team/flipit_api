@@ -10,7 +10,7 @@ import com.flip.data.repository.AppUserRepository;
 import com.flip.data.repository.AuthUserRepository;
 import com.flip.data.repository.RoleRepository;
 import com.flip.service.exception.EntityNotFoundException;
-import com.flip.service.exception.UserExistsException;
+import com.flip.service.exception.BadRequestException;
 import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.pojo.response.BaseResponse;
 import com.flip.service.services.AuthCodeService;
@@ -20,14 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -59,10 +57,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        //return new User("foo", "foo", new ArrayList<>());
-        AuthUser user = authUserRepository.findAuthUserByUsername(userName);
-        return user;
+        return authUserRepository.findAuthUserByUsername(userName);
     }
 
     @Override
@@ -79,7 +76,10 @@ public class UserServiceImpl implements UserService {
     public AppUser saveAppUser(UserRequest userRequest) throws Exception {
         if (appUserRepository.findByEmail(userRequest.getEmail()) != null ||
                 authUserRepository.findAuthUserByUsername(userRequest.getEmail()) != null) {
-            throw new UserExistsException(userRequest.getEmail());
+            throw new BadRequestException("A user with the email "+userRequest.getEmail()+" already exists");
+        }
+        if (appUserRepository.findByPhoneNumber(userRequest.getPhoneNumber()) != null) {
+            throw new BadRequestException("A user with the phone number "+userRequest.getPhoneNumber()+" already exists");
         }
 
         AuthUser authUser = new AuthUser(userRequest.getEmail(), passwordEncoder.encode(userRequest.getPassword()));
@@ -93,6 +93,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public AppUser updateUser(Long id, UserRequest userRequest) {
         AppUser appUser = findUserById(id);
         if (appUser == null) {
@@ -101,15 +102,10 @@ public class UserServiceImpl implements UserService {
 
         AppUser emailAppUser = appUserRepository.findByEmail(userRequest.getEmail());
         if (emailAppUser != null && !emailAppUser.getId().equals(appUser.getId())) {
-            throw new UserExistsException(userRequest.getEmail());
+            throw new BadRequestException(userRequest.getEmail());
         }
 
         BeanUtils.copyProperties(userRequest, appUser);
-        /*appUser.setTitle(userRequest.getTitle());
-        appUser.setFirstName(userRequest.getFirstName());
-        appUser.setMiddleName(userRequest.getMiddleName());
-        appUser.setLastName(userRequest.getLastName());
-        appUser.setPhoneNumber(userRequest.getPhoneNumber());*/
         appUser.setUserRoles(new HashSet<>(roleRepository.getRolesByIdIn(userRequest.getRoleIds())));
         appUserRepository.save(appUser);
         return appUser;

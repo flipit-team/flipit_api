@@ -1,5 +1,6 @@
 package com.flip.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.CredentialsContainer;
@@ -38,14 +39,6 @@ public class AuthUser implements UserDetails, CredentialsContainer {
     @Column(name = "reset_password")
     private boolean resetPassword = false;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
-    @JoinColumn(name = "created_by")
-    private AuthUser createdBy;
-
-    @OneToMany(fetch = FetchType.LAZY, targetEntity = Address.class)
-    @JoinColumn(name="auth_user_fk")
-    private Set<AppUser> appUsers = new HashSet<>();
-
     @Column(name = "password")
     private String password;
 
@@ -54,6 +47,15 @@ public class AuthUser implements UserDetails, CredentialsContainer {
 
     @Column(name = "enabled")
     private boolean enabled = true;
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
+    @JoinColumn(name = "created_by")
+    private AuthUser createdBy;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = Address.class)
+    @JoinColumn(name="auth_user_fk")
+    private Set<AppUser> appUsers = new HashSet<>();
 
     @Override
     public boolean equals(Object object) {

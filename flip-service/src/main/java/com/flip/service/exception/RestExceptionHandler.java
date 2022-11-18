@@ -47,7 +47,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(BAD_REQUEST, error, ex));
     }
 
-
     /**
      * Handle HttpMediaTypeNotSupportedException. This one triggers when JSON is invalid as well.
      *
@@ -194,13 +193,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Handles UserExistsException. Created to encapsulate errors with more detail than java.lang.Exception.
+     * Handles BadRequestException. Created to handle all generic bad request Exceptions.
      *
-     * @param ex the AuthenticationException
+     * @param ex the BadRequestException
      * @return the ApiError object
      */
-    @ExceptionHandler(UserExistsException.class)
-    protected ResponseEntity<Object> handleUserExists(UserExistsException ex) {
+    @ExceptionHandler(BadRequestException.class)
+    protected ResponseEntity<Object> handleBadRequest(BadRequestException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
