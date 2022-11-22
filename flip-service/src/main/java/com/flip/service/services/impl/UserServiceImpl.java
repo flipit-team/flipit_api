@@ -107,6 +107,7 @@ public class UserServiceImpl implements UserService {
 
         BeanUtils.copyProperties(userRequest, appUser);
         appUser.setUserRoles(new HashSet<>(roleRepository.getRolesByIdIn(userRequest.getRoleIds())));
+        appUser.setDateUpdated(new Date());
         appUserRepository.save(appUser);
         return appUser;
     }

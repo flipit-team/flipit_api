@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,9 +40,9 @@ public class AuthController {
         try {
             var auth = new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword());
             authManager.authenticate(auth);
-        } catch(AuthenticationException e) {
+        } catch(BadCredentialsException e) {
             throw new BadCredentialsException("Invalid username or password");
-        }
+        } catch (CredentialsExpiredException ignored) {}
 
         final UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
@@ -61,3 +62,4 @@ public class AuthController {
     }
 
 }
+
