@@ -28,5 +28,5 @@ public interface UserService extends UserDetailsService {
 
     BaseResponse verifyUser(Long userId, String code);
 
-    BaseResponse deactivateUser(Long id);
+    void deactivateUser(Long id);
 }

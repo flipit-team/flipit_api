@@ -9,8 +9,8 @@ import com.flip.data.enums.UserStatus;
 import com.flip.data.repository.AppUserRepository;
 import com.flip.data.repository.AuthUserRepository;
 import com.flip.data.repository.RoleRepository;
-import com.flip.service.exception.EntityNotFoundException;
 import com.flip.service.exception.BadRequestException;
+import com.flip.service.exception.EntityNotFoundException;
 import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.pojo.response.BaseResponse;
 import com.flip.service.services.AuthCodeService;
@@ -73,10 +73,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public AppUser saveAppUser(UserRequest userRequest) throws Exception {
+    public AppUser saveAppUser(UserRequest userRequest) {
         if (appUserRepository.findByEmail(userRequest.getEmail()) != null ||
                 authUserRepository.findAuthUserByUsername(userRequest.getEmail()) != null) {
-            throw new BadRequestException("A user with the email "+userRequest.getEmail()+" already exists");
+            throw new BadRequestException("A user with the email "+ userRequest.getEmail() +" already exists");
         }
         if (appUserRepository.findByPhoneNumber(userRequest.getPhoneNumber()) != null) {
             throw new BadRequestException("A user with the phone number "+userRequest.getPhoneNumber()+" already exists");
@@ -102,12 +102,13 @@ public class UserServiceImpl implements UserService {
 
         AppUser emailAppUser = appUserRepository.findByEmail(userRequest.getEmail());
         if (emailAppUser != null && !emailAppUser.getId().equals(appUser.getId())) {
-            throw new BadRequestException(userRequest.getEmail());
+            throw new BadRequestException("A user with the email "+ userRequest.getEmail() +" already exists");
         }
 
         BeanUtils.copyProperties(userRequest, appUser);
         appUser.setUserRoles(new HashSet<>(roleRepository.getRolesByIdIn(userRequest.getRoleIds())));
         appUser.setDateUpdated(new Date());
+        appUser.getAuthUser().setDateDeleted(new Date());
         appUserRepository.save(appUser);
         return appUser;
     }
@@ -146,16 +147,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse deactivateUser(Long id) {
+    @Transactional
+    public void deactivateUser(Long id) {
         AppUser appUser = findUserById(id);
         if (appUser == null) {
-            return new BaseResponse(ResponseCode.Not_Found);
+            throw new EntityNotFoundException(AppUser.class, "id", id.toString());
         }
 
         appUser.setStatus(UserStatus.Deactivated);
+        appUser.setDateDeleted(new Date());
+        appUser.getAuthUser().setEnabled(false);
+        appUser.getAuthUser().setDateDeleted(new Date());
         appUserRepository.save(appUser);
         //emailService.sendDeactivationEmail(user);
-        return new BaseResponse(ResponseCode.Success);
     }
 
 }
