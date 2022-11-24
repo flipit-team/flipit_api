@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(userRequest, appUser);
         appUser.setUserRoles(new HashSet<>(roleRepository.getRolesByIdIn(userRequest.getRoleIds())));
         appUser.setDateUpdated(new Date());
-        appUser.getAuthUser().setDateDeleted(new Date());
+        appUser.getAuthUser().setDateUpdated(new Date());
         appUserRepository.save(appUser);
         return appUser;
     }
@@ -148,17 +148,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deactivateUser(Long id) {
+    public void deleteUser(Long id) {
         AppUser appUser = findUserById(id);
         if (appUser == null) {
             throw new EntityNotFoundException(AppUser.class, "id", id.toString());
         }
 
-        appUser.setStatus(UserStatus.Deactivated);
-        appUser.setDateDeleted(new Date());
-        appUser.getAuthUser().setEnabled(false);
-        appUser.getAuthUser().setDateDeleted(new Date());
-        appUserRepository.save(appUser);
+        appUserRepository.delete(appUser);
         //emailService.sendDeactivationEmail(user);
     }
 

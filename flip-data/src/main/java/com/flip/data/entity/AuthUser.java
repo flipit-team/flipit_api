@@ -24,10 +24,6 @@ public class AuthUser implements UserDetails, CredentialsContainer {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "date_deleted")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateDeleted;
-
     @Column(name = "date_created")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated = new Date();
@@ -74,7 +70,6 @@ public class AuthUser implements UserDetails, CredentialsContainer {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.dateDeleted = dateDeleted;
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
         this.resetPassword = resetPassword;
@@ -93,7 +88,7 @@ public class AuthUser implements UserDetails, CredentialsContainer {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.dateDeleted == null;
+        return this.enabled;
     }
 
     @Override

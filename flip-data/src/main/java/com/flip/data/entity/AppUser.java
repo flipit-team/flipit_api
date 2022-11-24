@@ -55,7 +55,7 @@ public class AppUser extends BaseEntity {
     private boolean accountBlocked = false;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "auth_user_fk")
     private AuthUser authUser;
 
