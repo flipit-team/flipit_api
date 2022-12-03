@@ -24,8 +24,6 @@ public interface UserService extends UserDetailsService {
 
     AppUser updateUser(Long id, UserRequest userRequest);
 
-    BaseResponse initiateUserVerification(Long userId);
-
     BaseResponse verifyUser(Long userId, String code);
 
     void deleteUser(Long id);

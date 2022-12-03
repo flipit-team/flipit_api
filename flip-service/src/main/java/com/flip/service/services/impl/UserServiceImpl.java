@@ -14,6 +14,7 @@ import com.flip.service.exception.EntityNotFoundException;
 import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.pojo.response.BaseResponse;
 import com.flip.service.services.AuthCodeService;
+import com.flip.service.services.EmailService;
 import com.flip.service.services.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public AppUser findUserById(Long id) {
@@ -88,7 +92,8 @@ public class UserServiceImpl implements UserService {
         appUser.setStatus(UserStatus.Registered);
         authUserRepository.save(authUser);
         appUserRepository.save(appUser);
-        //emailService.sendAccountVerificationEmail(user);
+        authCodeService.createAuthCode(appUser, CodeType.Verification);
+        emailService.sendVerificationInitiationEmail(appUser);
         return appUser;
     }
 
@@ -114,18 +119,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseResponse initiateUserVerification(Long userId) {
-        AppUser appUser = appUserRepository.findAppUserById(userId);
-        if (appUser == null) {
-            return new BaseResponse(ResponseCode.Not_Found);
-        }
-
-        authCodeService.createAuthCode(appUser, CodeType.Verification);
-        //emailService.sendVerificationInitiationEmail(user);
-        return new BaseResponse(ResponseCode.Success);
-    }
-
-    @Override
     @Transactional
     public BaseResponse verifyUser(Long userId, String code) {
         AppUser appUser = appUserRepository.findAppUserById(userId);
@@ -142,7 +135,7 @@ public class UserServiceImpl implements UserService {
         appUser.setDateVerified(new Date());
         appUserRepository.save(appUser);
         authCodeService.expireCode(authCode);
-        //emailService.sendVerificationConfirmationEmail(user);
+        emailService.sendVerificationConfirmationEmail(appUser);
         return new BaseResponse(ResponseCode.Success);
     }
 
@@ -155,7 +148,7 @@ public class UserServiceImpl implements UserService {
         }
 
         appUserRepository.delete(appUser);
-        //emailService.sendDeactivationEmail(user);
+        emailService.sendDeactivationEmail(appUser);
     }
 
 }

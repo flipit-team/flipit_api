@@ -1,5 +1,6 @@
 package com.flip.service.services.impl;
 
+import com.flip.data.entity.AppUser;
 import com.flip.service.services.EmailService;
 import org.springframework.stereotype.Service;
 
@@ -8,4 +9,19 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class EmailServiceImpl implements EmailService {
+
+    @Override
+    public void sendVerificationConfirmationEmail(AppUser user) {
+
+    }
+
+    @Override
+    public void sendDeactivationEmail(AppUser user) {
+
+    }
+
+    @Override
+    public void sendVerificationInitiationEmail(AppUser user) {
+
+    }
 }
