@@ -18,6 +18,7 @@ import com.flip.service.services.AuthCodeService;
 import com.flip.service.services.BvnService;
 import com.flip.service.services.EmailService;
 import com.flip.service.services.UserService;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 /**
  * @author Charles on 23/06/2021
  */
+@Log4j2
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -166,9 +168,11 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isBlank(request.getFullName())) {
             request.setFullName(String.format("%s %s %s", appUser.getFirstName(), appUser.getMiddleName(), appUser.getLastName()));
         }
-        BaseResponse response = bvnService.verifyBvn(request);
-        if (!response.getResponseCode().equals("00"))
-            throw new FlipiException(INTERNAL_SERVER_ERROR, response.getResponseMessage());
+        try {
+            BaseResponse response = bvnService.verifyBvn(request);
+        } catch (Exception ex) {
+            throw new FlipiException(INTERNAL_SERVER_ERROR, "BVN verification failed.");
+        }
     }
 
 }
