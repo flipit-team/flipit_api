@@ -43,6 +43,9 @@ public class AppUser extends BaseEntity {
     @Column(name = "bvn")
     private String bvn;
 
+    @Column(name = "dob")
+    private Date dOB;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private UserStatus status;

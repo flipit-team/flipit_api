@@ -193,19 +193,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Handles BadRequestException. Created to handle all generic bad request Exceptions.
-     *
-     * @param ex the BadRequestException
-     * @return the ApiError object
-     */
-    @ExceptionHandler(BadRequestException.class)
-    protected ResponseEntity<Object> handleBadRequest(BadRequestException ex) {
-        ApiError apiError = new ApiError(BAD_REQUEST);
-        apiError.setMessage(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    /**
      * Handles AuthenticationException. Created to encapsulate errors with more detail than java.lang.Exception.
      *
      * @param ex the AuthenticationException
@@ -230,6 +217,19 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(BAD_REQUEST);
         apiError.setMessage(String.format("The parameter '%s' of value '%s' could not be converted to type '%s'", ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()));
         apiError.setDebugMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    /**
+     * Handles FlipiException.
+     *
+     * @param ex the FlipiException
+     * @return the ApiError object
+     */
+    @ExceptionHandler(FlipiException.class)
+    protected ResponseEntity<Object> handleFlipiException(FlipiException ex) {
+        ApiError apiError = new ApiError(ex.getHttpStatus());
+        apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }
 

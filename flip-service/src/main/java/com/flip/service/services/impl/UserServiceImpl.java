@@ -9,13 +9,16 @@ import com.flip.data.enums.UserStatus;
 import com.flip.data.repository.AppUserRepository;
 import com.flip.data.repository.AuthUserRepository;
 import com.flip.data.repository.RoleRepository;
-import com.flip.service.exception.BadRequestException;
 import com.flip.service.exception.EntityNotFoundException;
+import com.flip.service.exception.FlipiException;
+import com.flip.service.pojo.request.BvnVerificationRequest;
 import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.pojo.response.BaseResponse;
 import com.flip.service.services.AuthCodeService;
+import com.flip.service.services.BvnService;
 import com.flip.service.services.EmailService;
 import com.flip.service.services.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +33,7 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * @author Charles on 23/06/2021
@@ -55,6 +59,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private BvnService bvnService;
+
     @Override
     public AppUser findUserById(Long id) {
         return appUserRepository.findAppUserById(id);
@@ -70,8 +77,7 @@ public class UserServiceImpl implements UserService {
     public List<AppUser> getAllActiveUsers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<AppUser> userPage = appUserRepository.findAllActiveUsers(pageable);
-        userPage.forEach(x ->
-                x.getAuthUser().eraseCredentials());
+        userPage.forEach(x -> x.getAuthUser().eraseCredentials());
         return userPage.getContent();
     }
 
@@ -80,10 +86,10 @@ public class UserServiceImpl implements UserService {
     public AppUser saveAppUser(UserRequest userRequest) {
         if (appUserRepository.findByEmail(userRequest.getEmail()) != null ||
                 authUserRepository.findAuthUserByUsername(userRequest.getEmail()) != null) {
-            throw new BadRequestException("A user with the email "+ userRequest.getEmail() +" already exists");
+            throw new FlipiException("A user with the email " + userRequest.getEmail() + " already exists");
         }
         if (appUserRepository.findByPhoneNumber(userRequest.getPhoneNumber()) != null) {
-            throw new BadRequestException("A user with the phone number "+userRequest.getPhoneNumber()+" already exists");
+            throw new FlipiException("A user with the phone number " + userRequest.getPhoneNumber() + " already exists");
         }
 
         AuthUser authUser = new AuthUser(userRequest.getEmail(), passwordEncoder.encode(userRequest.getPassword()));
@@ -104,10 +110,9 @@ public class UserServiceImpl implements UserService {
         if (appUser == null) {
             throw new EntityNotFoundException(AppUser.class, "id", id.toString());
         }
-
         AppUser emailAppUser = appUserRepository.findByEmail(userRequest.getEmail());
         if (emailAppUser != null && !emailAppUser.getId().equals(appUser.getId())) {
-            throw new BadRequestException("A user with the email "+ userRequest.getEmail() +" already exists");
+            throw new FlipiException("A user with the email " + userRequest.getEmail() + " already exists");
         }
 
         BeanUtils.copyProperties(userRequest, appUser);
@@ -125,7 +130,6 @@ public class UserServiceImpl implements UserService {
         if (appUser == null) {
             return new BaseResponse(ResponseCode.Not_Found);
         }
-
         AuthCode authCode = authCodeService.findAuthCode(userId, CodeType.Verification, code);
         if (authCode == null) {
             return new BaseResponse(ResponseCode.Invalid_Code);
@@ -149,6 +153,22 @@ public class UserServiceImpl implements UserService {
 
         appUserRepository.delete(appUser);
         emailService.sendDeactivationEmail(appUser);
+    }
+
+    @Override
+    @Transactional
+    public void verifyUserBvn(Long userId, BvnVerificationRequest request) {
+        AppUser appUser = findUserById(userId);
+        if (appUser == null) {
+            throw new EntityNotFoundException(AppUser.class, "id", userId.toString());
+        }
+
+        if (StringUtils.isBlank(request.getFullName())) {
+            request.setFullName(String.format("%s %s %s", appUser.getFirstName(), appUser.getMiddleName(), appUser.getLastName()));
+        }
+        BaseResponse response = bvnService.verifyBvn(request);
+        if (!response.getResponseCode().equals("00"))
+            throw new FlipiException(INTERNAL_SERVER_ERROR, response.getResponseMessage());
     }
 
 }

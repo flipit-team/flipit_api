@@ -24,7 +24,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     @Autowired
     private AuthCodeRepository repository;
 
-    public AuthCode createAuthCode(AppUser user, CodeType codeType){
+    public AuthCode createAuthCode(AppUser user, CodeType codeType) {
         AuthCode authCode = new AuthCode();
         authCode.setCode(RefUtil.generateUniqueRef());
         authCode.setAppUser(user);
