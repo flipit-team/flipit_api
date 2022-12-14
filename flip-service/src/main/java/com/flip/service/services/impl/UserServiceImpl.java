@@ -169,9 +169,15 @@ public class UserServiceImpl implements UserService {
             request.setFullName(String.format("%s %s %s", appUser.getFirstName(), appUser.getMiddleName(), appUser.getLastName()));
         }
         try {
-            BaseResponse response = bvnService.verifyBvn(request);
+            var response = bvnService.verifyBvn(request);
+            if ("00".equals(response.getResponseCode())) {
+                appUser.setDateVerified(new Date());
+                appUser.setBvn(request.getBvn());
+                appUser.setDOB(request.getDOB());
+                appUserRepository.save(appUser);
+            }
         } catch (Exception ex) {
-            throw new FlipiException(INTERNAL_SERVER_ERROR, "BVN verification failed.");
+            throw new FlipiException(INTERNAL_SERVER_ERROR, "BVN verification failed. Please try again.");
         }
     }
 
