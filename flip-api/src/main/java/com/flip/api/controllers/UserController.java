@@ -2,6 +2,7 @@ package com.flip.api.controllers;
 
 import com.flip.data.entity.AppUser;
 import com.flip.service.pojo.request.BvnVerificationRequest;
+import com.flip.service.pojo.request.ProfileVerificationRequest;
 import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.services.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -51,6 +52,11 @@ public class UserController {
     @PostMapping("/verifyBvn/{id}")
     public void verifyBvn(@RequestBody BvnVerificationRequest bvnRequest, @PathVariable("id") Long id) {
         userService.verifyUserBvn(id, bvnRequest);
+    }
+
+    @PostMapping("/saveUserIdPath/{id}")
+    public void saveUserIdPath(@RequestBody ProfileVerificationRequest request, @PathVariable("id") Long id) {
+        userService.saveUserIdPath(id, request);
     }
 
 }

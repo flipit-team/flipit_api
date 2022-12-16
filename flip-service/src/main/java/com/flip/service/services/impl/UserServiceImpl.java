@@ -3,15 +3,18 @@ package com.flip.service.services.impl;
 import com.flip.data.entity.AppUser;
 import com.flip.data.entity.AuthCode;
 import com.flip.data.entity.AuthUser;
+import com.flip.data.entity.UserIdentification;
 import com.flip.data.enums.CodeType;
 import com.flip.data.enums.ResponseCode;
 import com.flip.data.enums.UserStatus;
 import com.flip.data.repository.AppUserRepository;
 import com.flip.data.repository.AuthUserRepository;
 import com.flip.data.repository.RoleRepository;
+import com.flip.data.repository.UserIdentificationRepository;
 import com.flip.service.exception.EntityNotFoundException;
 import com.flip.service.exception.FlipiException;
 import com.flip.service.pojo.request.BvnVerificationRequest;
+import com.flip.service.pojo.request.ProfileVerificationRequest;
 import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.pojo.response.BaseResponse;
 import com.flip.service.services.AuthCodeService;
@@ -63,6 +66,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private BvnService bvnService;
+
+    @Autowired
+    private UserIdentificationRepository userIdRepository;
 
     @Override
     public AppUser findUserById(Long id) {
@@ -120,7 +126,6 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(userRequest, appUser);
         appUser.setUserRoles(new HashSet<>(roleRepository.getRolesByIdIn(userRequest.getRoleIds())));
         appUser.setDateUpdated(new Date());
-        appUser.getAuthUser().setDateUpdated(new Date());
         appUserRepository.save(appUser);
         return appUser;
     }
@@ -181,4 +186,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    @Transactional
+    public void saveUserIdPath(Long userId, ProfileVerificationRequest request) {
+        AppUser appUser = findUserById(userId);
+        if (appUser == null) {
+            throw new EntityNotFoundException(AppUser.class, "id", userId.toString());
+        }
+        var id = userIdRepository.findUserIdentificationsByAppUser_IdAAndIdType(userId, request.getIdType());
+        if (id == null) {
+            id = new UserIdentification();
+            id.setAppUser(appUser);
+        }
+        id.setFilePath(request.getFilePath());
+        id.setIdType(request.getIdType());
+        userIdRepository.save(id);
+    }
 }

@@ -2,6 +2,7 @@ package com.flip.service.services;
 
 import com.flip.data.entity.AppUser;
 import com.flip.service.pojo.request.BvnVerificationRequest;
+import com.flip.service.pojo.request.ProfileVerificationRequest;
 import com.flip.service.pojo.request.UserRequest;
 import com.flip.service.pojo.response.BaseResponse;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,4 +31,6 @@ public interface UserService extends UserDetailsService {
     void deleteUser(Long id);
 
     void verifyUserBvn(Long userId, BvnVerificationRequest request);
+
+    void saveUserIdPath(Long userId, ProfileVerificationRequest request);
 }

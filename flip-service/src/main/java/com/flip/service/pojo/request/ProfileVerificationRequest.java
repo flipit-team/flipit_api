@@ -8,7 +8,6 @@ import lombok.ToString;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author Charles on 23/11/2022
@@ -19,10 +18,6 @@ import java.util.Date;
 @Component
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProfileVerificationRequest implements Serializable {
-
-    private String bvn;
-
-    private Date dOB;
 
     private String filePath;
 
