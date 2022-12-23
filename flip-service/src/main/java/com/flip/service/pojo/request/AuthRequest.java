@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
+
 /**
  * @author Charles on 26/11/2021
  */
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthRequest {
+public class AuthRequest implements Serializable {
 
     private String username;
     private String password;
