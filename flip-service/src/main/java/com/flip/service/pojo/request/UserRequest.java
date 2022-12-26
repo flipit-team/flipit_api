@@ -2,6 +2,7 @@ package com.flip.service.pojo.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.util.List;
 @Setter
 @ToString
 @Component
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRequest implements Serializable {
 
@@ -41,10 +43,10 @@ public class UserRequest implements Serializable {
     private String password;
 
     private List<Long> roleIds;
-    private boolean verified = false;
-    private boolean deactivated = false;
 
-    public UserRequest() {}
+    private boolean verified = false;
+
+    private boolean deactivated = false;
 
     public UserRequest(String title, String firstName, String middleName, String lastName, String email,
                        String phoneNumber, String password, List<Long> roleIds, boolean verified) {
