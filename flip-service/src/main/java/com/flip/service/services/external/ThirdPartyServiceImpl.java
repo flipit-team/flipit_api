@@ -1,6 +1,7 @@
 package com.flip.service.services.external;
 
 import com.flip.service.exception.HttpResponseException;
+import io.micrometer.core.instrument.util.IOUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.codec.binary.Base64;
@@ -82,6 +83,20 @@ public class ThirdPartyServiceImpl implements ThirdPartyService {
         return executeRequest(request, additionalHeaders);
     }
 
+    public InputStream patch(String url, Map<String, String> additionalHeaders, String body) throws IOException {
+        HttpPatch request = new HttpPatch(url);
+        request.setEntity(new StringEntity((body == null) ? "" : body, Charsets.UTF_8));
+        return executeRequest(request, additionalHeaders);
+    }
+
+    public String getAsString(String url, Map<String, String> additionalHeaders) throws IOException {
+        return streamToString(get(url, additionalHeaders));
+    }
+
+    public String postAsString(String url, Map<String, String> additionalHeaders, String body) throws IOException {
+        return streamToString(post(url, additionalHeaders, body));
+    }
+
     private HttpResponse execute(HttpRequestBase request, Map<String, String> additionalHeaders) throws IOException {
         for (Map.Entry<String, String> entry : fixedHeaders.entrySet()) {
             request.setHeader(entry.getKey(), entry.getValue());
@@ -129,6 +144,15 @@ public class ThirdPartyServiceImpl implements ThirdPartyService {
             }
             this.httpClient = null;
         }
+    }
+
+    private static String streamToString(InputStream stream) throws IOException {
+        if (stream == null) {
+            return null;
+        }
+
+        // TODO: handle character encoding by checking the content type of the response
+        return IOUtils.toString(stream);
     }
 
 }

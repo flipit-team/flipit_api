@@ -37,6 +37,7 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
@@ -193,7 +194,7 @@ public class UserServiceImpl implements UserService {
         if (appUser == null) {
             throw new EntityNotFoundException(AppUser.class, "id", userId.toString());
         }
-        var id = userIdRepository.findUserIdentificationsByAppUser_IdAAndIdType(userId, request.getIdType());
+        var id = userIdRepository.findUserIdentificationsByAppUser_IdAndIdType(userId, request.getIdType());
         if (id == null) {
             id = new UserIdentification();
             id.setAppUser(appUser);

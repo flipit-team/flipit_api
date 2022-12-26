@@ -24,4 +24,11 @@ public interface ThirdPartyService {
     InputStream put(String url, Map<String, String> additionalHeaders, String body) throws IOException;
 
     InputStream delete(String url, Map<String, String> additionalHeaders) throws IOException;
+
+    InputStream patch(String url, Map<String, String> additionalHeaders, String body) throws IOException;
+
+    String getAsString(String url, Map<String, String> additionalHeaders) throws IOException;
+
+    String postAsString(String url, Map<String, String> additionalHeaders, String body) throws IOException;
+
 }

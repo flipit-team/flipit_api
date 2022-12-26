@@ -13,6 +13,6 @@ public interface UserIdentificationRepository extends JpaRepository<UserIdentifi
 
     List<UserIdentification> findUserIdentificationsByAppUser_Id(Long id);
 
-    UserIdentification findUserIdentificationsByAppUser_IdAAndIdType(Long id, IdentificationType idType);
+    UserIdentification findUserIdentificationsByAppUser_IdAndIdType(Long id, IdentificationType idType);
 
 }
