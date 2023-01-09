@@ -174,6 +174,9 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isBlank(request.getFullName())) {
             request.setFullName(String.format("%s %s %s", appUser.getFirstName(), appUser.getMiddleName(), appUser.getLastName()));
         }
+        if (!StringUtils.isNumeric(request.getBvn()) || request.getBvn().length() != 10)
+            throw new FlipiException("Invalid BVN format");
+
         try {
             var response = bvnService.verifyBvn(request);
             if ("00".equals(response.getResponseCode())) {

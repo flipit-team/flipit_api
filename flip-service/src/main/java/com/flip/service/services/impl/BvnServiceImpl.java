@@ -13,6 +13,6 @@ public class BvnServiceImpl implements BvnService {
 
     @Override
     public BaseResponse verifyBvn(BvnVerificationRequest bvnRequest) {
-        return null;
+        return new BaseResponse("00", "Successful");
     }
 }
