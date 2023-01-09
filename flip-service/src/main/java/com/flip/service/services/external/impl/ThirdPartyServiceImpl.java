@@ -1,6 +1,7 @@
-package com.flip.service.services.external;
+package com.flip.service.services.external.impl;
 
 import com.flip.service.exception.HttpResponseException;
+import com.flip.service.services.external.ThirdPartyService;
 import io.micrometer.core.instrument.util.IOUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.Charsets;
