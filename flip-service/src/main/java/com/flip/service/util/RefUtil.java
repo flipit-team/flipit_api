@@ -13,11 +13,10 @@ import java.util.UUID;
 @Component
 public class RefUtil {
 
-    private static DateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+    private static final DateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     public static synchronized String generateUniqueRef() {
-        String ref = UUID.randomUUID().toString().replace("-", "");
-        return ref;
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     public static synchronized String generateTransactionRef() {

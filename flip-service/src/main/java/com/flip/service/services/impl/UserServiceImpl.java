@@ -107,8 +107,8 @@ public class UserServiceImpl implements UserService {
         appUser.setStatus(UserStatus.Registered);
         authUserRepository.save(authUser);
         appUserRepository.save(appUser);
-        authCodeService.createAuthCode(appUser, CodeType.Verification);
-        emailService.sendVerificationInitiationEmail(appUser);
+        AuthCode code = authCodeService.createAuthCode(appUser, CodeType.Verification);
+        emailService.sendVerificationInitiationEmail(appUser, code);
         return appUser;
     }
 
@@ -188,6 +188,24 @@ public class UserServiceImpl implements UserService {
         } catch (Exception ex) {
             throw new FlipiException(INTERNAL_SERVER_ERROR, "BVN verification failed. Please try again.");
         }
+    }
+
+    @Override
+    @Transactional
+    public void verifyUserEmail(Long userId, String code) {
+        AppUser appUser = findUserById(userId);
+        if (appUser == null) {
+            throw new EntityNotFoundException(AppUser.class, "id", userId.toString());
+        }
+
+        AuthCode authCode = authCodeService.findAuthCode(userId, CodeType.Verification, code);
+        if (authCode == null) {
+            throw new FlipiException("Invalid verification link.");
+        }
+        appUser.setDateVerified(new Date());
+        appUser.setStatus(UserStatus.Verified);
+        appUserRepository.save(appUser);
+        authCodeService.expireCode(authCode);
     }
 
     @Override

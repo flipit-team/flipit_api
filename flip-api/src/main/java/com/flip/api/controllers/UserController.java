@@ -49,6 +49,11 @@ public class UserController {
         userService.deleteUser(id);
     }
 
+    @PostMapping("/verifyEmail/{id}")
+    public void verifyEmail(@RequestParam(name = "code") String code, @PathVariable("id") Long id) {
+        userService.verifyUserEmail(id, code);
+    }
+
     @PostMapping("/verifyBvn/{id}")
     public void verifyBvn(@RequestBody BvnVerificationRequest bvnRequest, @PathVariable("id") Long id) {
         userService.verifyUserBvn(id, bvnRequest);

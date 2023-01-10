@@ -32,5 +32,7 @@ public interface UserService extends UserDetailsService {
 
     void verifyUserBvn(Long userId, BvnVerificationRequest request);
 
+    void verifyUserEmail(Long userId, String code);
+
     void saveUserIdPath(Long userId, ProfileVerificationRequest request);
 }

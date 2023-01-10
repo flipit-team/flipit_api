@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/",
             "/api/v1/auth/authenticate",
             "/api/v1/users/signup",
+            "/api/v1/users/verifyEmail/**",
             // -- Swagger UI v2
             "/v2/api-docs",
             "/swagger-resources",

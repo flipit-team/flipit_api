@@ -24,10 +24,12 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     @Autowired
     private AuthCodeRepository repository;
 
+    @Override
     public AuthCode createAuthCode(AppUser user, CodeType codeType) {
         AuthCode authCode = new AuthCode();
         authCode.setCode(RefUtil.generateUniqueRef());
         authCode.setAppUser(user);
+        authCode.setCodeType(codeType);
         authCode.setExpiryDate(new Date(System.currentTimeMillis() + (1000L * verCodeExpirySec)));
         repository.save(authCode);
         return authCode;
