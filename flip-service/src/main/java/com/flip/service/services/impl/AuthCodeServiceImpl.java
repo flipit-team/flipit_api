@@ -37,7 +37,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     public AuthCode findAuthCode(Long userId, CodeType codeType, String code) {
-        return repository.findByUserIdCodeTypeAndCode(userId, codeType, code, new Date());
+        return repository.fetchUserAuthCode(userId, codeType, code, new Date());
     }
 
     @Override

@@ -44,24 +44,24 @@ public class UserController {
         return userService.updateUser(id, userRequest);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
-    }
-
-    @PostMapping("/verifyEmail/{id}")
-    public void verifyEmail(@RequestParam(name = "code") String code, @PathVariable("id") Long id) {
+    @GetMapping("/verifyEmail/{id}")
+    public void verifyEmail(@PathVariable("id") Long id, @RequestParam(name = "code") String code) {
         userService.verifyUserEmail(id, code);
     }
 
     @PostMapping("/verifyBvn/{id}")
-    public void verifyBvn(@RequestBody BvnVerificationRequest bvnRequest, @PathVariable("id") Long id) {
+    public void verifyBvn(@PathVariable("id") Long id, @RequestBody BvnVerificationRequest bvnRequest) {
         userService.verifyUserBvn(id, bvnRequest);
     }
 
     @PostMapping("/saveUserIdPath/{id}")
-    public void saveUserIdPath(@RequestBody ProfileVerificationRequest request, @PathVariable("id") Long id) {
+    public void saveUserIdPath(@PathVariable("id") Long id, @RequestBody ProfileVerificationRequest request) {
         userService.saveUserIdPath(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
     }
 
 }

@@ -13,8 +13,8 @@ import java.util.Date;
  */
 public interface AuthCodeRepository extends JpaRepository<AuthCode, Long> {
 
-    @Query("select c from AuthCode c where c.appUser.id = :userId and c.codeType = :codeType and c.code = :code " +
-            "and c.used = false and c.expiryDate <= :now")
-    AuthCode findByUserIdCodeTypeAndCode(@Param("userId") Long userId, @Param("codeType") CodeType codeType,
+    @Query("select c from AuthCode c where c.used = false and c.appUser.id = :userId and " +
+            "c.codeType = :codeType and c.code = :code and c.expiryDate > :now")
+    AuthCode fetchUserAuthCode(@Param("userId") Long userId, @Param("codeType") CodeType codeType,
                                          @Param("code") String code, @Param("now") Date now);
 }

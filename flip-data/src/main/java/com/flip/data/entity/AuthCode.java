@@ -26,7 +26,7 @@ public class AuthCode extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date expiryDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuthUser.class)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AppUser.class)
     @JoinColumn(name = "app_user_fk", nullable = false)
     private AppUser appUser;
 
