@@ -43,6 +43,7 @@ public class AppUser extends BaseEntity {
     @Column(name = "bvn")
     private String bvn;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "dob")
     private Date dOB;
 

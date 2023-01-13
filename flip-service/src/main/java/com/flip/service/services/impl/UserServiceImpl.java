@@ -167,9 +167,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void verifyUserBvn(Long userId, BvnVerificationRequest request) {
         AppUser appUser = findUserById(userId);
-        if (appUser == null) {
+        if (appUser == null)
             throw new EntityNotFoundException(AppUser.class, "id", userId.toString());
-        }
 
         if (StringUtils.isBlank(request.getFullName())) {
             request.setFullName(String.format("%s %s %s", appUser.getFirstName(), appUser.getMiddleName(), appUser.getLastName()));
@@ -178,7 +177,7 @@ public class UserServiceImpl implements UserService {
             throw new FlipiException("Invalid BVN format");
 
         try {
-            var response = bvnService.verifyBvn(request);
+            BaseResponse response = bvnService.verifyBvn(request);
             if ("00".equals(response.getResponseCode())) {
                 appUser.setDateVerified(new Date());
                 appUser.setBvn(request.getBvn());
@@ -197,7 +196,6 @@ public class UserServiceImpl implements UserService {
         if (appUser == null) {
             throw new EntityNotFoundException(AppUser.class, "id", userId.toString());
         }
-
         AuthCode authCode = authCodeService.findAuthCode(userId, CodeType.Verification, code);
         if (authCode == null) {
             throw new FlipiException("Invalid verification link.");
