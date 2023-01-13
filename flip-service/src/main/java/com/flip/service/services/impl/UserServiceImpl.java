@@ -212,7 +212,7 @@ public class UserServiceImpl implements UserService {
         if (appUser == null) {
             throw new EntityNotFoundException(AppUser.class, "id", userId.toString());
         }
-        var id = userIdRepository.findUserIdentificationsByAppUser_IdAndIdType(userId, request.getIdType());
+        UserIdentification id = userIdRepository.findUserIdentificationsByAppUser_IdAndIdType(userId, request.getIdType());
         if (id == null) {
             id = new UserIdentification();
             id.setAppUser(appUser);
