@@ -158,7 +158,6 @@ public class UserServiceImpl implements UserService {
         if (appUser == null) {
             throw new EntityNotFoundException(AppUser.class, "id", id.toString());
         }
-
         appUserRepository.delete(appUser);
         emailService.sendDeactivationEmail(appUser);
     }
