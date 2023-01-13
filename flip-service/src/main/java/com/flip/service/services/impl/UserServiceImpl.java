@@ -48,10 +48,10 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private AppUserRepository appUserRepository;
+    private BvnService bvnService;
 
     @Autowired
-    private AuthUserRepository authUserRepository;
+    private EmailService emailService;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -63,10 +63,10 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private EmailService emailService;
+    private AppUserRepository appUserRepository;
 
     @Autowired
-    private BvnService bvnService;
+    private AuthUserRepository authUserRepository;
 
     @Autowired
     private UserIdentificationRepository userIdRepository;
