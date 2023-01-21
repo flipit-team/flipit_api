@@ -12,7 +12,12 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
 
     @Override
-    public List<Item> fetchItems(int page, int pageSize, String search) {
+    public List<Item> fetchItems(int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public List<Item> searchItems(int page, int pageSize, String search) {
         return null;
     }
 

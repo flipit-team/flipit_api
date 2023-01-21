@@ -24,10 +24,15 @@ public class ItemsController {
     private int pageSize;
 
     @GetMapping("/{page}/{size}")
-    public List<Item> getItems(@PathVariable("page") int page, @PathVariable("size") int size,
-                               @RequestParam String search) {
+    public List<Item> getItems(@PathVariable("page") int page, @PathVariable("size") int size) {
         size = size == 0 ? pageSize : size;
-        return itemService.fetchItems(page, size, search);
+        return itemService.fetchItems(page, size);
     }
 
+    @GetMapping("/search/{page}/{size}")
+    public List<Item> searchItems(@PathVariable("page") int page, @PathVariable("size") int size,
+                                  @RequestParam String search) {
+        size = size == 0 ? pageSize : size;
+        return itemService.searchItems(page, size, search);
+    }
 }
