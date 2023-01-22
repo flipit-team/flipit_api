@@ -134,6 +134,11 @@
             <artifactId>HikariCP</artifactId>
             <version>${hikaricp.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.fge</groupId>
+            <artifactId>jackson-coreutils</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

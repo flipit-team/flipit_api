@@ -21,6 +21,6 @@ public class State extends BaseEntity {
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Country.class)
-    @JoinColumn(name = "country")
+    @JoinColumn(name = "country_fk")
     private Country country;
 }
