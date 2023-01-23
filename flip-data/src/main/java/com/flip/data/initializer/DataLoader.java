@@ -1,4 +1,4 @@
-package com.flip.api.data;
+package com.flip.data.initializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.flip.data.entity.Country;
@@ -6,6 +6,7 @@ import com.flip.data.entity.State;
 import com.flip.data.repository.CountryRepository;
 import com.flip.data.repository.StateRepository;
 import com.github.fge.jackson.JsonLoader;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -20,6 +21,7 @@ import java.util.Set;
 /**
  * @author Charles on 21/01/2023
  */
+@Log4j2
 @Component
 public class DataLoader implements ApplicationRunner {
 
@@ -31,7 +33,7 @@ public class DataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        System.out.println("--------------- Initializing Data --------------");
+        log.info("--------------- Initializing Data --------------");
         if (countryRepository.count() == 0L) {
             loadCountriesAndStates();
         }
@@ -39,7 +41,7 @@ public class DataLoader implements ApplicationRunner {
 
     @Transactional
     void loadCountriesAndStates() throws IOException {
-        System.out.println("--------------- Populating Country Data --------------");
+        log.info("--------------- Populating Country Data --------------");
         URL resource = getClass().getClassLoader().getResource("countries.json");
         if (resource != null) {
             JsonNode countries = JsonLoader.fromURL(resource).get("countries");
@@ -62,6 +64,6 @@ public class DataLoader implements ApplicationRunner {
                 stateRepository.saveAll(stateSet);
             }
         }
-        System.out.println("--------------- Country Data Populated!! --------------");
+        log.info("--------------- Country Data Populated!! --------------");
     }
 }
