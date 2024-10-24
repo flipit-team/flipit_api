@@ -11,7 +11,7 @@ import com.flip.data.repository.AppUserRepository;
 import com.flip.data.repository.AuthUserRepository;
 import com.flip.data.repository.RoleRepository;
 import com.flip.data.repository.UserIdentificationRepository;
-import com.flip.service.exception.EntityNotFoundException;
+import com.flip.service.exception.FlipiEntityNotFoundException;
 import com.flip.service.exception.FlipiException;
 import com.flip.service.pojo.request.BvnVerificationRequest;
 import com.flip.service.pojo.request.ProfileVerificationRequest;
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
     public AppUser updateUser(Long id, UserRequest userRequest) {
         AppUser appUser = findUserById(id);
         if (appUser == null) {
-            throw new EntityNotFoundException(AppUser.class, "id", id.toString());
+            throw new FlipiEntityNotFoundException(AppUser.class, "id", id.toString());
         }
         AppUser emailAppUser = appUserRepository.findByEmail(userRequest.getEmail());
         if (emailAppUser != null && !emailAppUser.getId().equals(appUser.getId())) {
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         AppUser appUser = findUserById(id);
         if (appUser == null) {
-            throw new EntityNotFoundException(AppUser.class, "id", id.toString());
+            throw new FlipiEntityNotFoundException(AppUser.class, "id", id.toString());
         }
         appUserRepository.delete(appUser);
         emailService.sendDeactivationEmail(appUser);
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
     public void verifyUserBvn(Long userId, BvnVerificationRequest request) {
         AppUser appUser = findUserById(userId);
         if (appUser == null)
-            throw new EntityNotFoundException(AppUser.class, "id", userId.toString());
+            throw new FlipiEntityNotFoundException(AppUser.class, "id", userId.toString());
 
         if (StringUtils.isBlank(request.getFullName())) {
             request.setFullName(String.format("%s %s %s", appUser.getFirstName(), appUser.getMiddleName(), appUser.getLastName()));
@@ -193,7 +193,7 @@ public class UserServiceImpl implements UserService {
     public void verifyUserEmail(Long userId, String code) {
         AppUser appUser = findUserById(userId);
         if (appUser == null) {
-            throw new EntityNotFoundException(AppUser.class, "id", userId.toString());
+            throw new FlipiEntityNotFoundException(AppUser.class, "id", userId.toString());
         }
         AuthCode authCode = authCodeService.findAuthCode(userId, CodeType.Verification, code);
         if (authCode == null) {
@@ -210,7 +210,7 @@ public class UserServiceImpl implements UserService {
     public void saveUserIdPath(Long userId, ProfileVerificationRequest request) {
         AppUser appUser = findUserById(userId);
         if (appUser == null) {
-            throw new EntityNotFoundException(AppUser.class, "id", userId.toString());
+            throw new FlipiEntityNotFoundException(AppUser.class, "id", userId.toString());
         }
         UserIdentification id = userIdRepository.findUserIdentificationsByAppUser_IdAndIdType(userId, request.getIdType());
         if (id == null) {

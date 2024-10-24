@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "secret_key",
+    "type": "java.lang.String",
+    "description": "A description for 'secret_key'"
+  },
+  {
+    "name": "token_expiry_sec",
+    "type": "java.lang.String",
+    "description": "A description for 'token_expiry_sec'"
+  },
+  {
+    "name": "page.size",
+    "type": "java.lang.String",
+    "description": "A description for 'page.size'"
+  },
+  {
+    "name": "ver_code_expiry_sec",
+    "type": "java.lang.String",
+    "description": "A description for 'ver_code_expiry_sec'"
+  },
+  {
+    "name": "api.version",
+    "type": "java.lang.String",
+    "description": "A description for 'api.version'"
+  }
+]}

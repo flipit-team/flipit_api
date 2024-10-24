@@ -1,5 +1,6 @@
 package com.flip.api.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -21,8 +22,11 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
+    @Value("${api.version}")
+    private String apiVersion;
+
     @Bean
-    public Docket api() {
+    Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .securityContexts(List.of(securityContext()))
@@ -52,7 +56,7 @@ public class SwaggerConfig {
         return new ApiInfo(
                 "Flipi REST API",
                 "API documentation for Flipi app.",
-                "1.0",
+                apiVersion,
                 "Terms of service",
                 new Contact("Flipi Tech", "www.flipi.com", "dev@flipi.com"),
                 "License of API",

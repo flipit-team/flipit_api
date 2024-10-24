@@ -6,17 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class EntityNotFoundException extends RuntimeException {
+public class FlipiEntityNotFoundException extends RuntimeException {
 
-    public EntityNotFoundException(Class clazz, String... searchParamsMap) {
-        super(EntityNotFoundException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
+    public FlipiEntityNotFoundException(@SuppressWarnings("rawtypes") Class clazz, String... searchParamsMap) {
+        super(FlipiEntityNotFoundException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
     }
 
     private static String generateMessage(String entity, Map<String, String> searchParams) {
         return StringUtils.capitalize(entity) + " was not found for parameters " + searchParams;
     }
 
-    private static <K, V> Map<K, V> toMap(Class<K> keyType, Class<V> valueType, Object... entries) {
+    private static <K, V> Map<K, V> toMap(Class<K> keyType, Class<V> valueType, String... entries) {
         if (entries.length % 2 == 1)
             throw new IllegalArgumentException("Invalid entries");
 

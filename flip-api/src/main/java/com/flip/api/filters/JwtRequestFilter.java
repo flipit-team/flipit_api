@@ -3,6 +3,7 @@ package com.flip.api.filters;
 import com.flip.service.services.UserService;
 import com.flip.service.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,15 +29,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private UserService myUserService;
 
+    private static final String BEARER_PREFIX = "Bearer ";
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, 
+                                    @NonNull HttpServletResponse response, 
+                                    @NonNull FilterChain chain)
             throws ServletException, IOException {
+
         final String authorizationHeader = request.getHeader("Authorization");
         String username = null;
         String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
+        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)) {
+            jwt = authorizationHeader.substring(BEARER_PREFIX.length());
             username = jwtUtil.extractUsername(jwt);
         }
 
@@ -51,17 +57,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

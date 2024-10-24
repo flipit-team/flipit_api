@@ -40,8 +40,8 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        SecretKey encryptedSecKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+        return Jwts.parserBuilder().setSigningKey(encryptedSecKey).build().parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -54,11 +54,11 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-        SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+        SecretKey encryptedSecKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
         return Jwts.builder().setClaims(claims).setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + (1000L * tokenExpirySec)))
-                .signWith(secretKey).compact();
+                .signWith(encryptedSecKey).compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
