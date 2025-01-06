@@ -32,6 +32,9 @@ public class AuthUser implements UserDetails, CredentialsContainer {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateUpdated;
 
+    @Column(nullable = false)
+    private String oauthId;
+
     @Column(name = "reset_password")
     private boolean resetPassword = false;
 

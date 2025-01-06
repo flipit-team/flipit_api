@@ -43,7 +43,7 @@ public class ApiError {
     public ApiError(HttpStatus status, Throwable ex) {
         this();
         this.status = status;
-        this.message = "Unexpected error";
+        this.message = ex.getMessage();
         this.debugMessage = ex.getLocalizedMessage();
     }
 

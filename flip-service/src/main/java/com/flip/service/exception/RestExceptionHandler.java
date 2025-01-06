@@ -9,7 +9,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -20,9 +19,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import static org.springframework.http.HttpStatus.*;
-
 import javax.persistence.EntityNotFoundException;
+
+import static org.springframework.http.HttpStatus.*;
 
 @Log4j2
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -55,7 +54,7 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handleHttpMediaTypeNotSupported(
             HttpMediaTypeNotSupportedException ex,
             WebRequest request) {
-                
+
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getContentType());
         builder.append(" media type is not supported. Supported media types are ");
@@ -164,27 +163,27 @@ public class RestExceptionHandler {
     }
 
     /**
-     * Handles FlipiEntityNotFoundException. 
+     * Handles SearchNotFoundException.
      * Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
      *
-     * @param ex the FlipiEntityNotFoundException
+     * @param ex the SearchNotFoundException
      * @return the ApiError object
      */
-    @ExceptionHandler(FlipiEntityNotFoundException.class)
-    public ResponseEntity<Object> handleEntityNotFound(FlipiEntityNotFoundException ex) {
+    @ExceptionHandler(SearchNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFound(SearchNotFoundException ex) {
         ApiError apiError = new ApiError(NOT_FOUND);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }
 
     /**
-     * Handles AuthenticationException. Created to encapsulate errors with more detail than java.lang.Exception.
+     * Handles UnauthorizedException. Created to encapsulate errors with more detail than java.lang.Exception.
      *
-     * @param ex the AuthenticationException
+     * @param ex the UnauthorizedException
      * @return the ApiError object
      */
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Object> handleUnauthorizedException(UnauthorizedException ex) {
         ApiError apiError = new ApiError(UNAUTHORIZED);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
@@ -218,6 +217,15 @@ public class RestExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+    // Handle generic exceptions
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleGlobalException(
+            Exception ex, WebRequest request) {
+
+        ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR, "An error occurred", ex);
+        return buildResponseEntity(apiError);
+    }
+
     /**
      * Handles HttpResponseException.
      *
@@ -232,7 +240,7 @@ public class RestExceptionHandler {
     }
 
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
-        log.error("An error occured...", apiError);
+        log.error("An error occurred...", apiError);
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 

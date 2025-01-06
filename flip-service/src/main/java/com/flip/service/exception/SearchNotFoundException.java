@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class FlipiEntityNotFoundException extends RuntimeException {
+public class SearchNotFoundException extends RuntimeException {
 
-    public FlipiEntityNotFoundException(@SuppressWarnings("rawtypes") Class clazz, String... searchParamsMap) {
-        super(FlipiEntityNotFoundException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
+    public SearchNotFoundException(@SuppressWarnings("rawtypes") Class clazz, String... searchParamsMap) {
+        super(SearchNotFoundException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
     }
 
     private static String generateMessage(String entity, Map<String, String> searchParams) {
