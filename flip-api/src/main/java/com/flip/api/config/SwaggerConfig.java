@@ -54,11 +54,11 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "Flipi REST API",
-                "API documentation for Flipi app.",
+                "Flipit REST API",
+                "API documentation for Flipit app.",
                 apiVersion,
                 "Terms of service",
-                new Contact("Flipi Tech", "www.flipi.com", "dev@flipi.com"),
+                new Contact("Flipit Tech", "www.flipi.com", "dev@flipi.com"),
                 "License of API",
                 "API license URL",
                 Collections.emptyList());

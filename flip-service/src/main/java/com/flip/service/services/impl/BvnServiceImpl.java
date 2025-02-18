@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BvnServiceImpl implements BvnService {
-
+  
     @Override
     public BaseResponse verifyBvn(BvnVerificationRequest bvnRequest) {
         return new BaseResponse("00", "Successful");

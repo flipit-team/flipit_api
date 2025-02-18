@@ -23,6 +23,7 @@
             <artifactId>flip-service</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>

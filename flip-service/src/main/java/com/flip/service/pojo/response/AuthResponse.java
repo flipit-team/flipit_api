@@ -1,16 +1,19 @@
 package com.flip.service.pojo.response;
 
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
 
 /**
  * @author Charles on 26/11/2021
  */
+@Getter
 @Component
-public class AuthResponse {
+@NoArgsConstructor
+public class AuthResponse implements Serializable {
 
-    @Getter
     private String jwt;
 
     public AuthResponse(String jwt) {
