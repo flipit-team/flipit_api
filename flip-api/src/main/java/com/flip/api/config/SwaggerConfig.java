@@ -58,7 +58,7 @@ public class SwaggerConfig {
                 "API documentation for Flipit app.",
                 apiVersion,
                 "Terms of service",
-                new Contact("Flipit Tech", "www.flipi.com", "dev@flipi.com"),
+                new Contact("Flipit Tech", "https://flipit-web.vercel.app/", "flipialphatest@gmail.com"),
                 "License of API",
                 "API license URL",
                 Collections.emptyList());
