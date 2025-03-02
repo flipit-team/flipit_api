@@ -10,7 +10,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.flip</groupId>
     <artifactId>flip-api</artifactId>
     <packaging>jar</packaging>
     <name>Flip API Service</name>

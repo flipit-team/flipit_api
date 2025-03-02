@@ -7,7 +7,7 @@ import lombok.ToString;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 

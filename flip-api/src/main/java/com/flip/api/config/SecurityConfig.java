@@ -50,11 +50,11 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/configuration/ui",
             "/configuration/security",
-            "/swagger-ui.html",
             "/webjars/**",
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/swagger-ui.html"
     };
 
     @Bean
@@ -65,7 +65,7 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
-                .authorizeRequests(requests -> requests.antMatchers(AUTH_WHITELIST).permitAll()
+                .authorizeRequests(auth -> auth.requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated())
                 .authenticationManager(authenticationManager)
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -101,7 +101,7 @@ public class SecurityConfig {
         return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints,
                 endpointMediaTypes, corsProperties.toCorsConfiguration(),
                 new EndpointLinksResolver(allEndpoints, basePath),
-                shouldRegisterLinksMapping, null);
+                shouldRegisterLinksMapping);
     }
 
     private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties,

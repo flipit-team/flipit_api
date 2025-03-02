@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.flip</groupId>
             <artifactId>flip-data</artifactId>
-            <version>${project.parent.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

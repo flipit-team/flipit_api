@@ -1,66 +1,65 @@
 package com.flip.api.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.contexts.SecurityContext;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Charles on 19/10/2022
  */
 
-@EnableSwagger2
 @Configuration
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Flipit REST API",
+                version = "${api.version}",
+                contact = @Contact(
+                        name = "Flipit Tech",
+                        url = "https://flipit-web.vercel.app/",
+                        email = "flipialphatest@gmail.com"
+                ),
+                license = @License(
+                        name = "License of API",
+                        url = "API license URL"
+                ),
+                description = "API documentation for Flipit app."
+        ),
+        security = @SecurityRequirement(name = "JWT")
+)
+@SecurityScheme(
+        name = "JWT",
+        scheme = "bearer",
+        bearerFormat = "JWT",
+        type = SecuritySchemeType.HTTP,
+        in = SecuritySchemeIn.HEADER
+)
 public class SwaggerConfig {
 
-    @Value("${api.version}")
-    private String apiVersion;
-
     @Bean
-    Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .securityContexts(List.of(securityContext()))
-                .securitySchemes(List.of(apiKey()))
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build();
+    public OpenAPI customOpenAPI(@Value("${api.version}") String apiVersion) {
+        return new OpenAPI()
+                .components(new Components())
+                .info(new io.swagger.v3.oas.models.info.Info()
+                        .title("Flipit REST API")
+                        .version(apiVersion)
+                        .contact(new io.swagger.v3.oas.models.info.Contact()
+                                .name("Flipit Tech")
+                                .url("https://flipit-web.vercel.app/")
+                                .email("flipialphatest@gmail.com"))
+                        .license(new io.swagger.v3.oas.models.info.License()
+                                .name("License of API")
+                                .url("API license URL"))
+                        .description("API documentation for Flipit app."));
     }
 
-    private ApiKey apiKey() {
-        return new ApiKey("JWT", "Authorization", "header");
-    }
-
-    private SecurityContext securityContext() {
-        return SecurityContext.builder().securityReferences(defaultAuth()).build();
-    }
-
-    private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return List.of(new SecurityReference("JWT", authorizationScopes));
-    }
-
-    private ApiInfo apiInfo() {
-        return new ApiInfo(
-                "Flipit REST API",
-                "API documentation for Flipit app.",
-                apiVersion,
-                "Terms of service",
-                new Contact("Flipit Tech", "https://flipit-web.vercel.app/", "flipialphatest@gmail.com"),
-                "License of API",
-                "API license URL",
-                Collections.emptyList());
-    }
 }

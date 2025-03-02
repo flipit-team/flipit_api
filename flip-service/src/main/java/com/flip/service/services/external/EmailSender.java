@@ -1,6 +1,6 @@
 package com.flip.service.services.external;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 /**
  * @author Charles on 08/01/2023

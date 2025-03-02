@@ -12,7 +12,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
@@ -32,6 +32,7 @@ public class DataLoader implements ApplicationRunner {
     private CountryRepository countryRepository;
 
     @Override
+    @Transactional
     public void run(ApplicationArguments args) throws Exception {
         log.info("--------------- Initializing Data --------------");
         if (countryRepository.count() == 0L) {
@@ -40,7 +41,7 @@ public class DataLoader implements ApplicationRunner {
     }
 
     @Transactional
-    void loadCountriesAndStates() throws IOException {
+    protected void loadCountriesAndStates() throws IOException {
         log.info("--------------- Populating Country Data --------------");
         URL resource = getClass().getClassLoader().getResource("countries.json");
         if (resource != null) {

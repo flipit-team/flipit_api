@@ -19,7 +19,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -81,14 +81,14 @@ public class RestExceptionHandler {
     }
 
     /**
-     * Handles javax.validation.ConstraintViolationException. Thrown when @Validated fails.
+     * Handles jakarta.validation.ConstraintViolationException. Thrown when @Validated fails.
      *
      * @param ex the ConstraintViolationException
      * @return the ApiError object
      */
-    @ExceptionHandler(javax.validation.ConstraintViolationException.class)
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolation(
-            javax.validation.ConstraintViolationException ex) {
+            jakarta.validation.ConstraintViolationException ex) {
         ApiError apiError = new ApiError(UNPROCESSABLE_ENTITY);
         apiError.setMessage("Validation error");
         apiError.addValidationErrors(ex.getConstraintViolations());
@@ -140,7 +140,7 @@ public class RestExceptionHandler {
     }
 
     /**
-     * Handle javax.persistence.EntityNotFoundException
+     * Handle jakarta.persistence.EntityNotFoundException
      */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
@@ -164,7 +164,7 @@ public class RestExceptionHandler {
 
     /**
      * Handles SearchNotFoundException.
-     * Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
+     * Created to encapsulate errors with more detail than jakarta.persistence.EntityNotFoundException.
      *
      * @param ex the SearchNotFoundException
      * @return the ApiError object
